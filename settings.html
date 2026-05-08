@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="685667950_851931460606770_7624076952502804008_n-removebg-preview.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Rental Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { font-family: 'Segoe UI', sans-serif; background: #eef0f3; }
+
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 14px 24px;
+            background: #fff;
+            border-bottom: 1px solid #f0f0f0;
+            gap: 16px;
+            width: 100vw;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 40;
+        }
+
+        .sidebar-dashboard { z-index: 50; }
+        .dashboard-content { margin-top: 60px; }
+
+        .notification-btn {
+            background: none; border: none; cursor: pointer;
+            font-size: 18px; color: #333; padding: 4px; display: flex; align-items: center;
+        }
+
+        .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .user-profile-info { display: flex; flex-direction: column; align-items: flex-start; }
+        .user-profile-name { font-size: 13px; font-weight: 600; color: #333; }
+        .user-profile-email { font-size: 11px; color: #888; }
+
+        .page-body {
+            padding: 28px 28px 60px;
+            background: #eef0f3;
+            min-height: calc(100vh - 60px);
+        }
+
+        .settings-page-title { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 22px; }
+
+        .settings-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+            margin-bottom: 18px;
+            overflow: hidden;
+        }
+
+        .settings-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .settings-card-header-title { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+        .settings-card-header i { font-size: 12px; color: #aaa; transition: transform 0.2s; }
+        .settings-card-header.collapsed i { transform: rotate(180deg); }
+
+        .settings-card-body { padding: 20px; }
+
+        .s-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .s-form-row-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 14px;
+            align-items: flex-end;
+        }
+
+        .s-form-group { display: flex; flex-direction: column; gap: 5px; }
+
+        .s-form-label { font-size: 12px; font-weight: 600; color: #777; }
+
+        .s-form-input, .s-form-select {
+            padding: 9px 12px;
+            font-size: 13px;
+            border: 1px solid #e2e2e2;
+            border-radius: 8px;
+            background: #fff;
+            color: #1a1a1a;
+            outline: none;
+            transition: border-color 0.15s;
+            width: 100%;
+        }
+
+        .s-form-input:focus, .s-form-select:focus { border-color: #2C96CD; }
+
+        .s-save-btn {
+            background: #2C96CD; color: #fff; border: none;
+            border-radius: 8px; padding: 9px 20px; font-size: 13px;
+            font-weight: 600; cursor: pointer; white-space: nowrap;
+            transition: background 0.15s; height: 38px; align-self: flex-end;
+        }
+        .s-save-btn:hover { background: #1e7aab; }
+
+        /* Notification toggles */
+        .notif-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 13px 0; border-bottom: 1px solid #f5f5f5;
+        }
+        .notif-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .notif-row:first-child { padding-top: 0; }
+        .notif-label { font-size: 13px; color: #333; }
+
+        .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-track {
+            position: absolute; inset: 0; background: #ddd;
+            border-radius: 24px; cursor: pointer; transition: background 0.2s;
+        }
+        .toggle-track::after {
+            content: ''; position: absolute;
+            width: 18px; height: 18px; background: #fff;
+            border-radius: 50%; top: 3px; left: 3px;
+            transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .toggle-switch input:checked + .toggle-track { background: #2C96CD; }
+        .toggle-switch input:checked + .toggle-track::after { transform: translateX(20px); }
+
+        /* Account buttons */
+        .account-btn-group { display: flex; flex-direction: column; gap: 10px; }
+        .account-btn {
+            width: 100%; padding: 12px; border: none; border-radius: 8px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            transition: background 0.15s; background: #2C96CD; color: #fff;
+        }
+        .account-btn:hover { background: #1e7aab; }
+
+        /* ── Modal ──────────────────────────────────────────────────── */
+        .s-modal-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.45);
+            align-items: center; justify-content: center;
+            z-index: 200;
+        }
+
+        .s-modal {
+            background: #fff;
+            border-radius: 14px;
+            padding: 28px 28px 24px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+            position: relative;
+        }
+
+        .s-modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .s-modal-close {
+            position: absolute; top: 16px; right: 18px;
+            background: none; border: none; font-size: 20px;
+            color: #aaa; cursor: pointer; line-height: 1;
+        }
+        .s-modal-close:hover { color: #333; }
+
+        .s-modal-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+        .s-modal-label { font-size: 12px; font-weight: 600; color: #777; }
+
+        .s-modal-input {
+            padding: 10px 12px; font-size: 13px;
+            border: 1px solid #e2e2e2; border-radius: 8px;
+            background: #fafafa; color: #1a1a1a;
+            outline: none; transition: border-color 0.15s; width: 100%;
+        }
+        .s-modal-input:focus { border-color: #2C96CD; background: #fff; }
+        .s-modal-input[readonly] { background: #f0f0f0; color: #888; cursor: default; }
+
+        .s-modal-error {
+            font-size: 12px; color: #d32f2f;
+            background: #fff3f3; border: 1px solid #fbc4c4;
+            border-radius: 7px; padding: 8px 12px;
+            margin-bottom: 14px; display: none;
+        }
+
+        .s-modal-submit {
+            width: 100%; padding: 11px;
+            background: #2C96CD; color: #fff;
+            border: none; border-radius: 8px;
+            font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: background 0.15s;
+        }
+        .s-modal-submit:hover:not(:disabled) { background: #1e7aab; }
+        .s-modal-submit:disabled { background: #9ecde8; cursor: not-allowed; }
+
+        .s-modal-hint {
+            font-size: 11px; color: #aaa; margin-top: 10px; text-align: center;
+        }
+
+        /* ── Toast ──────────────────────────────────────────────────── */
+        .settings-toast {
+            position: fixed; bottom: 28px; right: 28px;
+            padding: 12px 20px; border-radius: 10px;
+            font-size: 13px; font-weight: 600;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+            z-index: 999; display: none;
+            animation: toastIn 0.25s ease;
+        }
+        .settings-toast-success { background: #e6f9ee; color: #1a7a41; border: 1px solid #b2e8c8; }
+        .settings-toast-error   { background: #fff3f3; color: #d32f2f; border: 1px solid #fbc4c4; }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+<div class="dashboard-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar-dashboard">
+        <div class="sidebar-top">
+            <div class="current-page-pill" id="currentPageName">Settings</div>
+        </div>
+        <nav class="nav-menu">
+            <button class="nav-btn" id="dashboard-btn"><i class="fas fa-chart-line"></i> Dashboard</button>
+            <button class="nav-btn" id="tenants-btn"><i class="fas fa-users"></i> Tenants</button>
+            <button class="nav-btn" id="room-details-btn"><i class="fas fa-home"></i> Room Details</button>
+            <button class="nav-btn" id="payment-btn"><i class="fas fa-credit-card"></i> Payment</button>
+            <button class="nav-btn active" id="settings-btn"><i class="fas fa-cog"></i> Settings</button>
+        </nav>
+        <div class="sidebar-bottom">
+            <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-content">
+        <header class="dashboard-header">
+            <button class="notification-btn"><i class="fas fa-bell"></i></button>
+           <div class="user-profile">
+    <div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:#2C96CD;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:0.03em;"></div>
+    <div class="user-profile-info">
+                    <div class="user-profile-name" id="userProfileName">User Name</div>
+                    <div class="user-profile-email" id="userProfileEmail">user@email.com</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-body">
+            <div class="settings-page-title">Settings</div>
+
+            <!-- ── General Settings ─────────────────────────────────── -->
+            <div class="settings-card">
+                <div class="settings-card-header" onclick="toggleSection(this)">
+                    <span class="settings-card-header-title">General Settings</span>
+                    <i class="fas fa-chevron-up"></i>
+                </div>
+                <div class="settings-card-body">
+                    <div class="s-form-row">
+                        <div class="s-form-group">
+                            <label class="s-form-label">System name</label>
+                            <input class="s-form-input" id="generalSystemName" type="text" value="Rental Management System">
+                        </div>
+                        <div class="s-form-group">
+                            <label class="s-form-label">Primary Contact Email</label>
+                            <input class="s-form-input" id="generalContactEmail" type="email" value="admin@Rental.ph">
+                        </div>
+                    </div>
+                    <div class="s-form-row-4">
+                        <div class="s-form-group">
+                            <label class="s-form-label">Time zone</label>
+                            <select class="s-form-select" id="generalTimezone">
+                                <option>(GMT+08:00) Manila</option>
+                                <option>(GMT+00:00) UTC</option>
+                                <option>(GMT-05:00) Eastern Time</option>
+                                <option>(GMT+09:00) Tokyo</option>
+                            </select>
+                        </div>
+                        <div class="s-form-group">
+                            <label class="s-form-label">Language</label>
+                            <select class="s-form-select" id="generalLanguage">
+                                <option>English (PH)</option>
+                                <option>Filipino</option>
+                                <option>English (US)</option>
+                            </select>
+                        </div>
+                        <button class="s-save-btn" onclick="saveGeneral()">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Notifications ────────────────────────────────────── -->
+            <div class="settings-card">
+                <div class="settings-card-header" onclick="toggleSection(this)">
+                    <span class="settings-card-header-title">Notifications</span>
+                    <i class="fas fa-chevron-up"></i>
+                </div>
+                <div class="settings-card-body">
+                    <div class="notif-row">
+                        <span class="notif-label">Email Notification for New Payment</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifEmailPayment" checked>
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+                    <div class="notif-row">
+                        <span class="notif-label">SMS Alert for Overdue Tenants (Requires API Key)</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifSmsOverdue" checked>
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+                    <div class="notif-row">
+                        <span class="notif-label">Receive Weekly Summary Reports</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifWeeklySummary" checked>
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Account Settings ─────────────────────────────────── -->
+            <div class="settings-card">
+                <div class="settings-card-header" onclick="toggleSection(this)">
+                    <span class="settings-card-header-title">Account Settings</span>
+                    <i class="fas fa-chevron-up"></i>
+                </div>
+                <div class="settings-card-body">
+                    <div class="account-btn-group">
+                        <button class="account-btn" onclick="changePassword()">
+                            <i class="fas fa-lock" style="margin-right:8px;"></i>Change Password
+                        </button>
+                        <button class="account-btn" onclick="updateEmail()">
+                            <i class="fas fa-envelope" style="margin-right:8px;"></i>Update Email
+                        </button>
+                        <button class="account-btn" onclick="updateNumber()">
+                            <i class="fas fa-phone" style="margin-right:8px;"></i>Update Phone Number
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end page-body -->
+    </main>
+</div>
+
+<!-- ══ MODAL: Change Password ══════════════════════════════════════════════ -->
+<div class="s-modal-overlay" id="modalChangePassword">
+    <div class="s-modal">
+        <button class="s-modal-close" onclick="document.getElementById('modalChangePassword').style.display='none'">&times;</button>
+        <div class="s-modal-title"><i class="fas fa-lock" style="color:#2C96CD;margin-right:8px;"></i>Change Password</div>
+
+        <div class="s-modal-group">
+            <label class="s-modal-label">Current Password</label>
+            <input class="s-modal-input" id="cpCurrentPassword" type="password" placeholder="Enter current password">
+        </div>
+        <div class="s-modal-group">
+            <label class="s-modal-label">New Password</label>
+            <input class="s-modal-input" id="cpNewPassword" type="password" placeholder="At least 6 characters">
+        </div>
+        <div class="s-modal-group">
+            <label class="s-modal-label">Confirm New Password</label>
+            <input class="s-modal-input" id="cpConfirmPassword" type="password" placeholder="Repeat new password">
+        </div>
+
+        <div class="s-modal-error" id="cpError"></div>
+        <button class="s-modal-submit" data-label="Update Password" onclick="submitChangePassword()">Update Password</button>
+        <p class="s-modal-hint">You'll stay logged in after changing your password.</p>
+    </div>
+</div>
+
+<!-- ══ MODAL: Update Email ═════════════════════════════════════════════════ -->
+<div class="s-modal-overlay" id="modalUpdateEmail">
+    <div class="s-modal">
+        <button class="s-modal-close" onclick="document.getElementById('modalUpdateEmail').style.display='none'">&times;</button>
+        <div class="s-modal-title"><i class="fas fa-envelope" style="color:#2C96CD;margin-right:8px;"></i>Update Email</div>
+
+        <div class="s-modal-group">
+            <label class="s-modal-label">Current Email</label>
+            <input class="s-modal-input" id="ueCurrentEmail" type="email" readonly>
+        </div>
+        <div class="s-modal-group">
+            <label class="s-modal-label">New Email Address</label>
+            <input class="s-modal-input" id="ueNewEmail" type="email" placeholder="your@newemail.com">
+        </div>
+        <div class="s-modal-group">
+            <label class="s-modal-label">Current Password (to confirm)</label>
+            <input class="s-modal-input" id="ueCurrentPassword" type="password" placeholder="Enter your password">
+        </div>
+
+        <div class="s-modal-error" id="ueError"></div>
+        <button class="s-modal-submit" data-label="Update Email" onclick="submitUpdateEmail()">Update Email</button>
+        <p class="s-modal-hint">A verification link will be sent to your new email.</p>
+    </div>
+</div>
+
+<!-- ══ MODAL: Update Phone Number ═════════════════════════════════════════ -->
+<div class="s-modal-overlay" id="modalUpdateNumber">
+    <div class="s-modal">
+        <button class="s-modal-close" onclick="document.getElementById('modalUpdateNumber').style.display='none'">&times;</button>
+        <div class="s-modal-title"><i class="fas fa-phone" style="color:#2C96CD;margin-right:8px;"></i>Update Phone Number</div>
+
+        <div class="s-modal-group">
+            <label class="s-modal-label">Current Phone Number</label>
+            <input class="s-modal-input" id="unCurrentPhone" type="tel" readonly>
+        </div>
+        <div class="s-modal-group">
+            <label class="s-modal-label">New Phone Number</label>
+            <input class="s-modal-input" id="unNewPhone" type="tel" placeholder="+63 9XX XXX XXXX">
+        </div>
+        <div class="s-modal-group">
+            <label class="s-modal-label">Current Password (to confirm)</label>
+            <input class="s-modal-input" id="unCurrentPassword" type="password" placeholder="Enter your password">
+        </div>
+
+        <div class="s-modal-error" id="unError"></div>
+        <button class="s-modal-submit" data-label="Update Number" onclick="submitUpdateNumber()">Update Number</button>
+        <p class="s-modal-hint">Phone number is stored in your profile only — not used for SMS auth.</p>
+    </div>
+</div>
+
+<script src="dashboard.js"></script>
+<script type="module" src="settings.js"></script>
+<script>
+function loadUserProfile() {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (!userData) { window.location.replace('index.html'); return; }
+
+    document.getElementById('userProfileName').textContent  = userData.name  || 'User Name';
+    document.getElementById('userProfileEmail').textContent = userData.email || 'user@email.com';
+
+    const nameParts = (userData.name || '').trim().split(' ').filter(Boolean);
+    let initials = '';
+    if (nameParts.length >= 2) {
+        initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+    } else if (userData.email) {
+        const emailUser = userData.email.split('@')[0].replace(/[0-9]/g, '');
+        const emailParts = emailUser.match(/[a-z]+/gi) || [];
+        initials = emailParts.length >= 2
+            ? (emailParts[0][0] + emailParts[1][0]).toUpperCase()
+            : emailUser.slice(0, 2).toUpperCase();
+    } else {
+        initials = (userData.name || 'U').slice(0, 2).toUpperCase();
+    }
+    document.getElementById('userAvatar').textContent = initials;
+
+    if (userData.role === 'tenant') {
+        document.getElementById('tenants-btn').style.display      = 'none';
+        document.getElementById('room-details-btn').style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadUserProfile);
+</script>
+
+<script src="dashboard.js"></script>
+<script type="module" src="settings.js"></script>
+
+</body>
+</html>

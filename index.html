@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="685667950_851931460606770_7624076952502804008_n-removebg-preview.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Management System - Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal h2 {
+            margin-bottom: 24px;
+            color: #333;
+            text-align: center;
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .role-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: #fff;
+        }
+
+        .role-btn:hover {
+            border-color: #667eea;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #667eea;
+        }
+
+        .btn-register-modal {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: background 0.2s, opacity 0.2s;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .btn-register-modal:hover:not(:disabled) {
+            background: #5568d3;
+        }
+
+        .btn-register-modal:disabled {
+            background: #b0b8f8;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .error-message {
+            color: #c33;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            color: #16a34a;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .loading {
+            display: none;
+        }
+
+        .loading.show {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* ── Brand title fitting ── */
+        .brand-title {
+            width: 100%;
+        }
+
+        .brand-title span {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            line-height: 1.2;
+            font-size: clamp(0.5rem, 3.8vw, 3.5rem);
+            letter-spacing: 1px;
+        }
+
+        .brand-title span:first-child {
+            font-size: clamp(0.8rem, 4.2vw, 3.5rem);
+        }
+
+        /* ── Terms checkbox row ── */
+        .terms-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin: 12px 0 4px 0;
+        }
+
+        .terms-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            accent-color: #667eea;
+            cursor: pointer;
+        }
+
+        .terms-row label {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+            cursor: pointer;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .terms-link {
+            color: #667eea;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 12px;
+            font-family: inherit;
+        }
+
+        .terms-link:hover {
+            color: #5568d3;
+        }
+
+        .terms-locked-hint {
+            font-size: 11px;
+            color: #999;
+            text-align: center;
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* ── Shared policy/terms modal styles ── */
+        .terms-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .terms-modal-overlay.active {
+            display: flex;
+        }
+
+        .terms-modal {
+            background: #fff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 620px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            margin: 16px;
+        }
+
+        .terms-modal-header {
+            padding: 24px 28px 16px 28px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .terms-modal-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #1a3a52;
+        }
+
+        .terms-modal-header p {
+            margin: 4px 0 0 0;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .terms-modal-close {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+
+        .terms-modal-close:hover {
+            color: #333;
+        }
+
+        .terms-modal-body {
+            padding: 20px 28px;
+            overflow-y: auto;
+            flex: 1;
+            font-size: 13.5px;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        .terms-modal-body h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a3a52;
+            margin: 20px 0 6px 0;
+        }
+
+        .terms-modal-body h3:first-child {
+            margin-top: 0;
+        }
+
+        .terms-modal-body p {
+            margin: 0 0 10px 0;
+        }
+
+        .terms-modal-body ul {
+            margin: 6px 0 10px 0;
+            padding-left: 20px;
+        }
+
+        .terms-modal-body ul li {
+            margin-bottom: 4px;
+        }
+
+        .terms-modal-footer {
+            padding: 16px 28px 24px 28px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .terms-decline-btn {
+            flex: 1;
+            padding: 11px;
+            border: 1.5px solid #e5e7eb;
+            background: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .terms-decline-btn:hover {
+            border-color: #ccc;
+            color: #333;
+        }
+
+        .terms-accept-btn {
+            flex: 1;
+            padding: 11px;
+            border: none;
+            background: #667eea;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: inherit;
+        }
+
+        .terms-accept-btn:hover {
+            background: #5568d3;
+        }
+
+        /* ── Footer ── */
+        .login-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            border-top: 1px solid #e5e7eb;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            background: none;
+            border: none;
+            color: #667eea;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: #5568d3;
+        }
+
+        .footer-sep {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        /* ── Close-only footer for policy modals opened from footer ── */
+        .footer-only {
+            justify-content: flex-end;
+        }
+
+        .terms-close-btn {
+            flex: 0 0 auto;
+            padding: 11px 28px;
+            border: none;
+            background: #667eea;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: inherit;
+        }
+
+        .terms-close-btn:hover {
+            background: #5568d3;
+        }
+
+        /* ── Password visibility toggle ── */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 40px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #aaa;
+            font-size: 15px;
+            padding: 0;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-content">
+                <h1 class="brand-title" id="brandTitle">
+                    <span>RENTAL</span>
+                    <span>MANAGE</span>
+                    <span>MENT</span>
+                    <span>SYSTEM</span>
+                </h1>
+            </div>
+        </div>
+
+        <!-- Right Form Section -->
+        <div class="form-section">
+            <div class="form-container">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" name="email" placeholder="" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" placeholder="" required>
+                            <button type="button" class="toggle-password" data-target="password" tabindex="-1">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <label for="rememberMe" class="checkbox-label">Remember me</label>
+                    </div>
+
+                    <div class="error-message" id="loginError"></div>
+
+                    <button type="submit" class="btn btn-login">
+                        <span class="loading" id="loginLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                        Login
+                    </button>
+                </form>
+
+                <div class="divider"><span>or</span></div>
+
+                <button type="button" class="btn btn-register" id="registerBtn">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Footer ── -->
+    <footer class="login-footer">
+        <span>© 2026 Rental Management System</span>
+        <span class="footer-sep">|</span>
+        <button class="footer-link" id="footerPrivacyBtn">Privacy Policy</button>
+        <span class="footer-sep">|</span>
+        <button class="footer-link" id="footerTermsBtn">Terms &amp; Conditions</button>
+    </footer>
+
+    <!-- Registration Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal" style="position:relative;">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <h2>Create Account</h2>
+
+            <div class="role-buttons">
+                <button type="button" class="role-btn active" data-role="tenant">Tenant</button>
+                <button type="button" class="role-btn" data-role="landlord">Landlord</button>
+            </div>
+
+            <form id="registerForm">
+                <!-- ✅ NEW: Full Name field -->
+                <div class="form-group">
+                    <label for="regFullName">Full Name</label>
+                    <input type="text" id="regFullName" name="fullName"
+                           placeholder="e.g. Jerick Ubaldo" required>
+                    <div class="error-message" id="fullNameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regUsername">Username</label>
+                    <input type="text" id="regUsername" name="username"
+                           placeholder="Choose your username" required>
+                    <div class="error-message" id="usernameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regEmail">Email address</label>
+                    <input type="email" id="regEmail" name="email"
+                           placeholder="your@email.com" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="regPassword" name="password"
+                               placeholder="At least 6 characters" required>
+                        <button type="button" class="toggle-password" data-target="regPassword" tabindex="-1">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="regConfirmPassword" name="confirmPassword"
+                               placeholder="Confirm your password" required>
+                        <button type="button" class="toggle-password" data-target="regConfirmPassword" tabindex="-1">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+
+                <!-- Terms & Conditions Checkbox -->
+                <div class="terms-row">
+                    <input type="checkbox" id="agreeTerms">
+                    <label for="agreeTerms">
+                        I have read and agree to the
+                        <button type="button" class="terms-link" id="openTermsBtn">Terms and Conditions</button>
+                    </label>
+                </div>
+                <div class="error-message" id="termsError"></div>
+
+                <span class="terms-locked-hint" id="termsLockedHint">
+                    ⚠️ Please agree to the Terms and Conditions to enable registration.
+                </span>
+
+                <div class="error-message" id="registerError"></div>
+
+                <button type="submit" class="btn-register-modal"
+                        id="registerSubmitBtn" disabled>
+                    <span class="loading" id="registerLoading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </span>
+                    Register
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Terms & Conditions Modal (register + footer) -->
+    <div class="terms-modal-overlay" id="termsModal">
+        <div class="terms-modal">
+            <div class="terms-modal-header">
+                <div>
+                    <h2>Terms and Conditions</h2>
+                    <p>Last Updated: May 2026</p>
+                </div>
+                <button class="terms-modal-close" id="closeTermsBtn">&times;</button>
+            </div>
+
+            <div class="terms-modal-body">
+                <p>Welcome to the Rental Management System. By accessing or using this system, you agree to comply with the following Terms and Conditions. Please read them carefully before using the platform.</p>
+
+                <h3>1. Acceptance of Terms</h3>
+                <p>By registering and using this Rental Management System, users agree to follow all rules, policies, and responsibilities stated in this agreement.</p>
+
+                <h3>2. User Accounts</h3>
+                <p>Users are responsible for maintaining the confidentiality of their account credentials and ensuring that all information provided is accurate and up to date.</p>
+                <p>The system administrator reserves the right to suspend or remove accounts that contain false information or violate system policies.</p>
+
+                <h3>3. Tenant Responsibilities</h3>
+                <p>Tenants agree to:</p>
+                <ul>
+                    <li>Provide accurate personal and payment information</li>
+                    <li>Upload valid payment receipts when required</li>
+                    <li>Review billing information regularly</li>
+                    <li>Respond to official notifications and reminders</li>
+                </ul>
+                <p>Tenants are responsible for ensuring that rental payments are submitted on or before the due date.</p>
+
+                <h3>4. Payment Verification</h3>
+                <p>All submitted payments and uploaded receipts are subject to verification by the landlord.</p>
+                <p>Submitting a payment receipt does not automatically confirm payment approval until reviewed by the landlord.</p>
+
+                <h3>5. Notifications and Announcements</h3>
+                <p>Users agree to receive notifications related to:</p>
+                <ul>
+                    <li>Rental billing reminders</li>
+                    <li>Payment confirmations</li>
+                    <li>Maintenance schedules</li>
+                    <li>Property announcements</li>
+                    <li>System updates</li>
+                </ul>
+                <p>Notifications may appear within the system and may also be sent through email when applicable.</p>
+
+                <h3>6. Privacy and Data Collection</h3>
+                <p>The system collects user information such as names, email addresses, contact numbers, payment details, and uploaded receipts solely for rental management purposes.</p>
+                <p>User data will be handled responsibly and will not be shared with unauthorized third parties.</p>
+
+                <h3>7. Prohibited Activities</h3>
+                <p>Users must not:</p>
+                <ul>
+                    <li>Attempt unauthorized access to the system</li>
+                    <li>Upload harmful or misleading content</li>
+                    <li>Manipulate payment records or system data</li>
+                    <li>Use the platform for unlawful activities</li>
+                </ul>
+                <p>Any misuse of the system may result in account suspension or removal.</p>
+
+                <h3>8. System Availability</h3>
+                <p>The Rental Management System may occasionally undergo maintenance, updates, or temporary downtime to improve functionality and security.</p>
+                <p>The administrator is not responsible for temporary service interruptions caused by maintenance or technical issues.</p>
+
+                <h3>9. Limitation of Liability</h3>
+                <p>The system serves as a rental management platform to assist landlords and tenants with records, billing, and notifications.</p>
+                <p>The administrator is not liable for losses, damages, or disputes arising from misuse of the system or inaccurate information submitted by users.</p>
+
+                <h3>10. Changes to Terms</h3>
+                <p>These Terms and Conditions may be updated or modified at any time without prior notice. Continued use of the system after updates constitutes acceptance of the revised terms.</p>
+
+                <h3>11. Contact Information</h3>
+                <p>For concerns, questions, or support regarding the Rental Management System, users may contact the system administrator directly.</p>
+
+                <p style="margin-top:16px; font-weight:600; color:#1a3a52;">
+                    By using this system, you acknowledge that you have read, understood, and agreed to these Terms and Conditions.
+                </p>
+            </div>
+
+            <!-- Footer swaps between register mode (Decline/Accept) and view mode (Close) -->
+            <div class="terms-modal-footer" id="termsModalFooter">
+                <button class="terms-decline-btn" id="declineTermsBtn">Decline</button>
+                <button class="terms-accept-btn"  id="acceptTermsBtn">I Accept</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div class="terms-modal-overlay" id="privacyModal">
+        <div class="terms-modal">
+            <div class="terms-modal-header">
+                <div>
+                    <h2>Privacy Policy</h2>
+                    <p>Last Updated: May 2026</p>
+                </div>
+                <button class="terms-modal-close" id="closePrivacyBtn">&times;</button>
+            </div>
+
+            <div class="terms-modal-body">
+                <p>This Privacy Policy explains how the Rental Management System collects, uses, stores, and protects user information. By using this system, you agree to the practices described in this policy.</p>
+
+                <h3>1. Information We Collect</h3>
+                <p>The system may collect the following information from users:</p>
+                <ul>
+                    <li>Full name</li>
+                    <li>Email address</li>
+                    <li>Contact number</li>
+                    <li>Room and rental information</li>
+                    <li>Payment records</li>
+                    <li>Uploaded payment receipts</li>
+                    <li>Account login information</li>
+                </ul>
+                <p>This information is collected only for rental management and system functionality purposes.</p>
+
+                <h3>2. How We Use Information</h3>
+                <p>Collected information may be used to:</p>
+                <ul>
+                    <li>Manage tenant and room records</li>
+                    <li>Process and verify payments</li>
+                    <li>Send billing reminders and notifications</li>
+                    <li>Provide maintenance announcements</li>
+                    <li>Improve system functionality and user experience</li>
+                    <li>Maintain account security and authentication</li>
+                </ul>
+
+                <h3>3. Notifications and Communication</h3>
+                <p>Users may receive notifications through the system regarding:</p>
+                <ul>
+                    <li>Payment reminders</li>
+                    <li>Billing confirmations</li>
+                    <li>Maintenance schedules</li>
+                    <li>Announcements and updates</li>
+                    <li>Account-related activities</li>
+                </ul>
+                <p>When applicable, notifications may also be sent through email.</p>
+
+                <h3>4. Data Storage and Security</h3>
+                <p>User information is stored securely using Firebase services, including Firestore Database and Authentication.</p>
+                <p>Reasonable measures are implemented to help protect user information from unauthorized access, modification, or misuse.</p>
+
+                <h3>5. Sharing of Information</h3>
+                <p>User information will not be sold, rented, or shared with unauthorized third parties.</p>
+                <p>Information may only be accessed by authorized administrators responsible for managing the rental system.</p>
+
+                <h3>6. User Responsibilities</h3>
+                <p>Users are responsible for:</p>
+                <ul>
+                    <li>Providing accurate information</li>
+                    <li>Protecting their account credentials</li>
+                    <li>Logging out after using shared devices</li>
+                    <li>Reporting suspicious account activity when necessary</li>
+                </ul>
+
+                <h3>7. Uploaded Files and Receipts</h3>
+                <p>Uploaded payment receipts and related documents are used solely for payment verification and rental management purposes.</p>
+                <p>Users must ensure that uploaded files are accurate and appropriate.</p>
+
+                <h3>8. Data Retention</h3>
+                <p>User records and payment information may be retained within the system for documentation, reporting, and rental management purposes unless removal is requested or required by the administrator.</p>
+
+                <h3>9. Changes to This Privacy Policy</h3>
+                <p>This Privacy Policy may be updated or modified when necessary to improve system functionality, security, or compliance.</p>
+                <p>Continued use of the system after updates indicates acceptance of the revised policy.</p>
+
+                <h3>10. Contact Information</h3>
+                <p>For concerns, questions, or requests related to privacy and data handling, users may contact the system administrator directly.</p>
+
+                <p style="margin-top:16px; font-weight:600; color:#1a3a52;">
+                    By using this Rental Management System, you acknowledge that you have read, understood, and agreed to this Privacy Policy.
+                </p>
+            </div>
+
+            <div class="terms-modal-footer footer-only">
+                <button class="terms-close-btn" id="closePrivacyFooterBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ── Brand title ── */
+        function applySystemNameToBrand(name) {
+            var el = document.getElementById('brandTitle');
+            if (!el) return;
+            var DEFAULT_WORDS = ['RENTAL', 'MANAGE', 'MENT', 'SYSTEM'];
+            var words;
+            if (name && name.trim()) {
+                var raw = name.trim().toUpperCase().split(/\s+/);
+                if (raw.length === 1) {
+                    var w = raw[0], mid = Math.ceil(w.length / 2);
+                    words = [w.slice(0, mid), w.slice(mid), '', ''];
+                } else if (raw.length === 2) {
+                    words = [raw[0], raw[1], '', ''];
+                } else if (raw.length === 3) {
+                    words = [raw[0], raw[1], raw[2], ''];
+                } else {
+                    words = raw.slice(0, 4);
+                }
+                while (words.length < 4) words.push('');
+                document.title = name.trim() + ' - Login';
+            } else {
+                words = DEFAULT_WORDS;
+            }
+            el.querySelectorAll('span').forEach(function(span, i) {
+                span.textContent = words[i] || '';
+            });
+        }
+        window.applySystemNameToBrand = applySystemNameToBrand;
+        applySystemNameToBrand(localStorage.getItem('rms_system_name') || '');
+
+        /* ── Register button enable/disable ── */
+        var agreeCheckbox     = document.getElementById('agreeTerms');
+        var registerSubmitBtn = document.getElementById('registerSubmitBtn');
+        var termsLockedHint   = document.getElementById('termsLockedHint');
+
+        function syncRegisterButton() {
+            var checked = agreeCheckbox.checked;
+            registerSubmitBtn.disabled = !checked;
+            termsLockedHint.style.display = checked ? 'none' : 'block';
+        }
+        syncRegisterButton();
+        agreeCheckbox.addEventListener('change', syncRegisterButton);
+
+        /* ── Terms modal — tracks whether opened from register or footer ── */
+        var termsModal       = document.getElementById('termsModal');
+        var termsModalFooter = document.getElementById('termsModalFooter');
+        var fromRegister     = false;
+
+        function openTermsFromRegister() {
+            fromRegister = true;
+            termsModalFooter.innerHTML =
+                '<button class="terms-decline-btn" id="declineTermsBtn">Decline</button>' +
+                '<button class="terms-accept-btn"  id="acceptTermsBtn">I Accept</button>';
+            bindTermsFooterBtns();
+            termsModal.classList.add('active');
+        }
+
+        function openTermsFromFooter() {
+            fromRegister = false;
+            termsModalFooter.innerHTML =
+                '<button class="terms-close-btn" id="closeTermsFooterBtn">Close</button>';
+            document.getElementById('closeTermsFooterBtn').addEventListener('click', function() {
+                termsModal.classList.remove('active');
+            });
+            termsModal.classList.add('active');
+        }
+
+        function bindTermsFooterBtns() {
+            document.getElementById('declineTermsBtn').addEventListener('click', function() {
+                agreeCheckbox.checked = false;
+                syncRegisterButton();
+                termsModal.classList.remove('active');
+            });
+            document.getElementById('acceptTermsBtn').addEventListener('click', function() {
+                agreeCheckbox.checked = true;
+                syncRegisterButton();
+                termsModal.classList.remove('active');
+            });
+        }
+
+        document.getElementById('openTermsBtn').addEventListener('click', openTermsFromRegister);
+        document.getElementById('closeTermsBtn').addEventListener('click', function() {
+            termsModal.classList.remove('active');
+        });
+        termsModal.addEventListener('click', function(e) {
+            if (e.target === termsModal) termsModal.classList.remove('active');
+        });
+
+        /* ── Privacy Policy modal ── */
+        var privacyModal = document.getElementById('privacyModal');
+
+        document.getElementById('footerPrivacyBtn').addEventListener('click', function() {
+            privacyModal.classList.add('active');
+        });
+        document.getElementById('closePrivacyBtn').addEventListener('click', function() {
+            privacyModal.classList.remove('active');
+        });
+        document.getElementById('closePrivacyFooterBtn').addEventListener('click', function() {
+            privacyModal.classList.remove('active');
+        });
+        privacyModal.addEventListener('click', function(e) {
+            if (e.target === privacyModal) privacyModal.classList.remove('active');
+        });
+
+        /* ── Footer Terms button ── */
+        document.getElementById('footerTermsBtn').addEventListener('click', openTermsFromFooter);
+
+        /* ── Reset checkbox when register modal opens ── */
+        document.getElementById('registerBtn').addEventListener('click', function() {
+            agreeCheckbox.checked = false;
+            syncRegisterButton();
+        });
+    </script>
+
+    <!-- Firebase Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAGd7Aaiu_d-VIokG16gapCZOlpGheb9tY",
+            authDomain: "rentalmangemnetsystem.firebaseapp.com",
+            projectId: "rentalmangemnetsystem",
+            storageBucket: "rentalmangemnetsystem.firebasestorage.app",
+            messagingSenderId: "143952534193",
+            appId: "1:143952534193:web:1a0dc97e5e0f10fde16090",
+            measurementId: "G-8HXJE3259V"
+        };
+
+        const app       = initializeApp(firebaseConfig);
+        const auth      = getAuth(app);
+        const db        = getFirestore(app);
+        const analytics = getAnalytics(app);
+
+        let selectedRole = 'tenant';
+
+        const registerBtn   = document.getElementById('registerBtn');
+        const closeModal    = document.getElementById('closeModal');
+        const registerModal = document.getElementById('registerModal');
+        const roleButtons   = document.querySelectorAll('.role-btn');
+
+        registerBtn.addEventListener('click', () => registerModal.classList.add('active'));
+        closeModal.addEventListener('click',  () => registerModal.classList.remove('active'));
+        registerModal.addEventListener('click', (e) => {
+            if (e.target === registerModal) registerModal.classList.remove('active');
+        });
+
+        roleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                roleButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedRole = btn.dataset.role;
+            });
+        });
+
+        // ── Login ──
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email        = document.getElementById('email').value.trim();
+            const password     = document.getElementById('password').value;
+            const rememberMe   = document.getElementById('rememberMe').checked;
+            const loginError   = document.getElementById('loginError');
+            const loginLoading = document.getElementById('loginLoading');
+
+            loginError.classList.remove('show');
+            loginLoading.classList.add('show');
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                const q    = query(collection(db, 'users'), where('uid', '==', user.uid));
+                const snap = await getDocs(q);
+                if (snap.empty) throw new Error('User profile not found');
+                const userData = snap.docs[0].data();
+
+                // prefer fullName, fall back to username
+               localStorage.setItem('userData', JSON.stringify({
+    name: userData.fullName || userData.username,
+    username: userData.username,
+    email: userData.email,
+    role: userData.role,
+    uid: user.uid
+}));
+
+                if (rememberMe) localStorage.setItem('rememberedEmail', email);
+                else localStorage.removeItem('rememberedEmail');
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                loginError.textContent = error.message || 'Login failed. Please try again.';
+                loginError.classList.add('show');
+                loginLoading.classList.remove('show');
+            }
+        });
+
+        // ── Register ──
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+        
+            const fullName          = document.getElementById('regFullName').value.trim();
+            const username          = document.getElementById('regUsername').value.trim();
+            const email             = document.getElementById('regEmail').value.trim();
+            const password          = document.getElementById('regPassword').value;
+            const confirmPassword   = document.getElementById('regConfirmPassword').value;
+            const registerSubmitBtn = document.getElementById('registerSubmitBtn');
+            const registerLoading   = document.getElementById('registerLoading');
+
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+
+            let isValid = true;
+
+            // ✅ NEW: validate fullName
+            if (fullName.length < 2) {
+                document.getElementById('fullNameError').textContent = 'Please enter your full name';
+                document.getElementById('fullNameError').classList.add('show');
+                isValid = false;
+            }
+            if (username.length < 3) {
+                document.getElementById('usernameError').textContent = 'Username must be at least 3 characters';
+                document.getElementById('usernameError').classList.add('show');
+                isValid = false;
+            }
+            if (password.length < 6) {
+                document.getElementById('passwordError').textContent = 'Password must be at least 6 characters';
+                document.getElementById('passwordError').classList.add('show');
+                isValid = false;
+            }
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+                document.getElementById('confirmPasswordError').classList.add('show');
+                isValid = false;
+            }
+            if (!isValid) return;
+
+            registerLoading.classList.add('show');
+            registerSubmitBtn.disabled = true;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // ✅ UPDATED: save fullName to Firestore
+                await addDoc(collection(db, 'users'), {
+                    uid: user.uid,
+                    fullName,
+                    username,
+                    email,
+                    role: selectedRole,
+                    createdAt: new Date()
+                });
+
+                // ✅ UPDATED: store fullName as the display name
+                localStorage.setItem('userData', JSON.stringify({
+                    name: fullName,
+                    email,
+                    role: selectedRole,
+                    uid: user.uid
+                }));
+
+                alert(`Welcome ${fullName}! Registration successful as ${selectedRole}`);
+                registerModal.classList.remove('active');
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                const errorMessage = document.getElementById('registerError');
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage.textContent = 'Email already registered';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage.textContent = 'Invalid email address';
+                } else {
+                    errorMessage.textContent = error.message || 'Registration failed. Please try again.';
+                }
+                errorMessage.classList.add('show');
+                registerLoading.classList.remove('show');
+                registerSubmitBtn.disabled = !document.getElementById('agreeTerms').checked;
+            }
+        });
+    </script>
+        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.toggle-password');
+    if (!btn) return;
+
+    const targetId = btn.getAttribute('data-target');
+    const input = document.getElementById(targetId);
+    const icon = btn.querySelector('i');
+
+    if (!input) return;
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+  });
+</script>
+</body>
+</html>
