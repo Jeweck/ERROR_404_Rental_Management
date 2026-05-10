@@ -51,12 +51,43 @@
             margin-bottom: 22px;
         }
 
+        .payment-page-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .payment-page-title {
             font-size: 22px; font-weight: 700; color: #1a1a1a;
             display: flex; align-items: center; gap: 10px;
         }
 
         .receipts-count-badge { font-size: 13px; font-weight: 400; color: #888; }
+
+        /* ── Header action buttons ── */
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .hdr-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 16px; border-radius: 8px; font-size: 13px;
+            font-weight: 600; cursor: pointer; border: none; transition: all .2s;
+            font-family: inherit;
+        }
+        .hdr-btn-outline {
+            background: #fff; color: #2C96CD; border: 1.5px solid #2C96CD;
+        }
+        .hdr-btn-outline:hover { background: #f0f7ff; }
+
+        .submitted-badge {
+            background: #ef4444; color: #fff; border-radius: 50%;
+            width: 18px; height: 18px; font-size: 10px;
+            display: inline-flex; align-items: center; justify-content: center;
+            margin-left: 2px;
+        }
 
         /* ── Empty state ── */
         .empty-state-wrap {
@@ -75,7 +106,7 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         .fa-spin { animation: spin 0.8s linear infinite; }
 
-        /* ── Receipts list — full width ── */
+        /* ── Receipts list ── */
         .receipts-list {
             display: flex;
             flex-direction: column;
@@ -83,7 +114,7 @@
             width: 100%;
         }
 
-        /* ── Receipt card — full width ── */
+        /* ── Receipt card ── */
         .receipt-card {
             background: #fff;
             border: 1px solid #e5e7eb;
@@ -151,7 +182,7 @@
 
         .hidden-for-tenant { display: none !important; }
 
-        /* ── Floating btn container — bottom right ── */
+        /* ── Floating btn ── */
         .floating-btn-container {
             position: fixed;
             bottom: 32px;
@@ -169,28 +200,26 @@
         .floating-btn:hover { background: #1e7aab; }
         .floating-btn:active { background: #1a6a96; }
 
-        /* ── Add/Edit Modal ── */
+        /* ── Overlays ── */
         .modal-overlay {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35);
             align-items: center; justify-content: center; z-index: 200;
         }
         .modal-overlay.open { display: flex; }
 
+        /* ── Add/Edit Modal ── */
         .modal {
             background: #fff; border-radius: 16px; padding: 28px; width: 400px;
             box-shadow: 0 8px 40px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto;
         }
         .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; }
-
         .modal label { font-size: 12px; color: #777; display: block; margin-bottom: 5px; margin-top: 14px; font-weight: 600; }
-
         .modal input, .modal select {
             width: 100%; padding: 9px 12px; border: 1.5px solid #e5e7eb;
             border-radius: 8px; font-size: 14px; color: #222; outline: none;
             transition: border 0.2s; font-family: inherit;
         }
         .modal input:focus, .modal select:focus { border-color: #2C96CD; }
-
         .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
         .modal-actions button {
             flex: 1; padding: 10px; border-radius: 8px; font-size: 14px;
@@ -202,7 +231,82 @@
         .btn-save:hover { background: #1e7aa8; }
         .btn-save:disabled { background: #a0c8e0; cursor: not-allowed; }
 
-        /* ── Landlord modal ── */
+        /* ── Upload Receipt Modal (Tenant) ── */
+        .upload-modal {
+            background: #fff; border-radius: 16px; padding: 28px; width: 440px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto;
+        }
+        .upload-modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; }
+        .upload-modal label { font-size: 12px; color: #777; display: block; margin-bottom: 5px; margin-top: 14px; font-weight: 600; }
+        .upload-modal input[type="text"], .upload-modal textarea {
+            width: 100%; padding: 9px 12px; border: 1.5px solid #e5e7eb;
+            border-radius: 8px; font-size: 14px; color: #222; outline: none;
+            transition: border 0.2s; font-family: inherit;
+        }
+        .upload-modal input[type="text"]:focus, .upload-modal textarea:focus { border-color: #2C96CD; }
+        .upload-modal textarea { resize: vertical; min-height: 70px; }
+
+        .drop-zone {
+            border: 2px dashed #c8d8e8; border-radius: 12px; padding: 36px 20px;
+            text-align: center; cursor: pointer; transition: all .2s; background: #fafcff;
+            position: relative;
+        }
+        .drop-zone:hover, .drop-zone.dragover { border-color: #2C96CD; background: #f0f7ff; }
+        .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .drop-zone i { font-size: 36px; color: #c8d8e8; margin-bottom: 10px; display: block; transition: color .2s; }
+        .drop-zone:hover i, .drop-zone.dragover i { color: #2C96CD; }
+        .drop-zone p { font-size: 13px; color: #999; margin: 0; }
+        .drop-zone p strong { color: #2C96CD; }
+
+        .preview-wrap { margin-top: 14px; display: none; border-radius: 10px; overflow: hidden; position: relative; }
+        .preview-wrap img { width: 100%; max-height: 220px; object-fit: cover; display: block; }
+        .preview-remove {
+            position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.5);
+            color: #fff; border: none; border-radius: 50%; width: 28px; height: 28px;
+            cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ── View Submitted Modal (Landlord) ── */
+        .view-submitted-modal {
+            background: #fff; border-radius: 16px; padding: 28px; width: 560px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15); max-height: 85vh; overflow-y: auto; position: relative;
+        }
+        .view-submitted-modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #1a1a1a; }
+        .modal-close-x {
+            position: absolute; top: 16px; right: 18px; background: none;
+            border: none; font-size: 22px; cursor: pointer; color: #999; line-height: 1;
+        }
+        .modal-close-x:hover { color: #333; }
+
+        .submitted-list { display: flex; flex-direction: column; gap: 14px; }
+        .submitted-card { border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
+        .submitted-img {
+            width: 100%; max-height: 200px; object-fit: cover; display: block;
+            cursor: zoom-in; transition: opacity .2s;
+        }
+        .submitted-img:hover { opacity: .9; }
+        .submitted-info { padding: 12px 16px; background: #fafafa; }
+        .submitted-tenant { font-size: 13px; font-weight: 700; color: #1a1a1a; }
+        .submitted-note { font-size: 12px; color: #666; margin-top: 3px; }
+        .submitted-date { font-size: 11px; color: #aaa; margin-top: 4px; }
+        .submitted-dismiss {
+            font-size: 11px; color: #ef4444; background: none; border: none;
+            cursor: pointer; padding: 0; margin-top: 6px;
+        }
+        .submitted-dismiss:hover { text-decoration: underline; }
+
+        .no-submissions { text-align: center; padding: 50px 20px; color: #bbb; }
+        .no-submissions i { font-size: 40px; margin-bottom: 12px; display: block; }
+
+        /* ── Lightbox ── */
+        .lightbox {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85);
+            align-items: center; justify-content: center; z-index: 400; cursor: zoom-out;
+        }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,.5); }
+
+        /* ── Landlord Payment Modal ── */
         .landlord-modal {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35);
             align-items: center; justify-content: center; z-index: 200;
@@ -282,8 +386,8 @@
     <header class="dashboard-header">
         <button class="notification-btn"><i class="fas fa-bell"></i></button>
         <div class="user-profile">
-    <div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:#2C96CD;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:0.03em;"></div>
-    <div class="user-profile-info">
+            <div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:#2C96CD;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:0.03em;"></div>
+            <div class="user-profile-info">
                 <div class="user-profile-name" id="userProfileName">User Name</div>
                 <div class="user-profile-email" id="userProfileEmail">user@email.com</div>
             </div>
@@ -296,10 +400,12 @@
 
             <!-- Page header -->
             <div class="payment-page-header">
-                <div class="payment-page-title">
-                    Receipts
+                <div class="payment-page-title-group">
+                    <div class="payment-page-title">Receipts</div>
                     <span class="receipts-count-badge" id="receiptsCountBadge"></span>
                 </div>
+                <!-- Header action buttons (role-based) -->
+                <div class="header-actions" id="headerActions"></div>
             </div>
 
             <!-- Loading -->
@@ -313,21 +419,21 @@
                 <p>No receipts yet. Click <strong>+ Add Receipt</strong> to get started.</p>
             </div>
 
-            <!-- Receipts list — full width -->
+            <!-- Receipts list -->
             <div class="receipts-list" id="receipts-list"></div>
 
         </div>
     </div>
 
     <!-- Floating button -->
-    <div class="floating-btn-container">
+    <div class="floating-btn-container" id="floatingContainer">
         <button class="floating-btn" id="add-receipt-btn">
             <i class="fas fa-plus"></i> Add Receipt
         </button>
     </div>
 </div>
 
-<!-- Add / Edit Receipt Modal -->
+<!-- ── Add / Edit Receipt Modal ── -->
 <div class="modal-overlay" id="modal">
     <div class="modal">
         <h3 id="modal-title">Add Receipt</h3>
@@ -349,7 +455,46 @@
     </div>
 </div>
 
-<!-- Landlord Payment Details Modal (Tenant Only) -->
+<!-- ── Upload Receipt Modal (Tenant only) ── -->
+<div class="modal-overlay" id="uploadOverlay">
+    <div class="upload-modal">
+        <h3><i class="fas fa-cloud-upload-alt" style="color:#2C96CD;margin-right:8px"></i>Upload Receipt</h3>
+        <div class="drop-zone" id="dropZone">
+            <input type="file" id="fileInput" accept="image/*">
+            <i class="fas fa-image"></i>
+            <p><strong>Click or drag</strong> an image here</p>
+            <p style="margin-top:4px;font-size:11px">JPG, PNG, WEBP supported</p>
+        </div>
+        <div class="preview-wrap" id="previewWrap">
+            <img id="previewImg" src="" alt="Preview">
+            <button class="preview-remove" id="removeImg" title="Remove image"><i class="fas fa-times"></i></button>
+        </div>
+        <label>Your Name</label>
+        <input type="text" id="uploaderName" placeholder="e.g. Juan Dela Cruz">
+        <label>Note (optional)</label>
+        <textarea id="uploadNote" placeholder="e.g. Rent for June 2025"></textarea>
+        <div class="modal-actions">
+            <button class="btn-cancel" id="cancelUploadBtn">Cancel</button>
+            <button class="btn-save" id="submitUploadBtn">Submit</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── View Submitted Receipts Modal (Landlord only) ── -->
+<div class="modal-overlay" id="viewOverlay">
+    <div class="view-submitted-modal">
+        <button class="modal-close-x" id="closeViewModal">&times;</button>
+        <h3><i class="fas fa-images" style="color:#2C96CD;margin-right:8px"></i>Submitted Receipts</h3>
+        <div class="submitted-list" id="submittedList"></div>
+    </div>
+</div>
+
+<!-- ── Image Lightbox ── -->
+<div class="lightbox" id="lightbox">
+    <img id="lightboxImg" src="" alt="Full receipt">
+</div>
+
+<!-- ── Landlord Payment Details Modal (Tenant only) ── -->
 <div class="landlord-modal" id="landlordModal">
     <div class="landlord-card">
         <button class="close-landlord-btn" id="closeLandlordModal">&times;</button>
@@ -397,7 +542,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-// ── Firebase Init ────────────────────────────────────────────────────────────
+// ── Firebase Init ─────────────────────────────────────────────────────────
 const firebaseConfig = {
     apiKey:            "AIzaSyAGd7Aaiu_d-VIokG16gapCZOlpGheb9tY",
     authDomain:        "rentalmangemnetsystem.firebaseapp.com",
@@ -412,11 +557,12 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db          = firebase.firestore();
 const receiptsCol = db.collection('receipts');
 
-// ── State ────────────────────────────────────────────────────────────────────
-let userRole  = 'landlord';
-let editingId = null;
+// ── State ─────────────────────────────────────────────────────────────────
+let userRole    = 'landlord';
+let editingId   = null;
+let uploadedImageData = null;
 
-// ── DOM refs ─────────────────────────────────────────────────────────────────
+// ── DOM refs ──────────────────────────────────────────────────────────────
 const addBtn        = document.getElementById('add-receipt-btn');
 const modal         = document.getElementById('modal');
 const cancelBtn     = document.getElementById('cancel-btn');
@@ -425,8 +571,11 @@ const list          = document.getElementById('receipts-list');
 const emptyWrap     = document.getElementById('empty-wrap');
 const loadingWrap   = document.getElementById('loading-wrap');
 const landlordModal = document.getElementById('landlordModal');
+const uploadOverlay = document.getElementById('uploadOverlay');
+const viewOverlay   = document.getElementById('viewOverlay');
+const lightbox      = document.getElementById('lightbox');
 
-// ── Toast ────────────────────────────────────────────────────────────────────
+// ── Toast ─────────────────────────────────────────────────────────────────
 function showToast(msg, type = '') {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -434,38 +583,70 @@ function showToast(msg, type = '') {
     setTimeout(() => t.className = 'toast', 3000);
 }
 
-// ── Update count badge ───────────────────────────────────────────────────────
+// ── Count badge ───────────────────────────────────────────────────────────
 function updateCountBadge() {
     const count = list.children.length;
     const badge = document.getElementById('receiptsCountBadge');
     if (badge) badge.textContent = count + ' receipt' + (count !== 1 ? 's' : '');
 }
 
-// ── Load user profile ────────────────────────────────────────────────────────
+// ── Submissions (localStorage — no Firebase) ──────────────────────────────
+function getSubmissions() {
+    try { return JSON.parse(localStorage.getItem('submittedReceipts') || '[]'); } catch(e) { return []; }
+}
+function saveSubmissions(arr) {
+    localStorage.setItem('submittedReceipts', JSON.stringify(arr));
+}
+
+// ── Header actions (role-based) ───────────────────────────────────────────
+function renderHeaderActions() {
+    const area = document.getElementById('headerActions');
+    if (userRole === 'tenant') {
+        area.innerHTML = `
+            <button class="hdr-btn hdr-btn-outline" id="uploadReceiptBtn">
+                <i class="fas fa-upload"></i> Upload Receipt
+            </button>`;
+        document.getElementById('uploadReceiptBtn').addEventListener('click', () => {
+            uploadOverlay.classList.add('open');
+        });
+    } else {
+        // Landlord: show "View Submitted" with badge
+        const count = getSubmissions().length;
+        const badgeHtml = count ? `<span class="submitted-badge">${count}</span>` : '';
+        area.innerHTML = `
+            <button class="hdr-btn hdr-btn-outline" id="viewSubmittedBtn">
+                <i class="fas fa-images"></i> View Submitted${badgeHtml}
+            </button>`;
+        document.getElementById('viewSubmittedBtn').addEventListener('click', openViewModal);
+    }
+}
+
+// ── Load user profile ─────────────────────────────────────────────────────
 function loadUserProfile() {
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (userData) {
         userRole = userData.role || 'landlord';
         document.getElementById('userProfileName').textContent  = userData.username || userData.name || 'User Name';
         document.getElementById('userProfileEmail').textContent = userData.email || 'user@email.com';
+
         const nameParts = (userData.name || '').trim().split(' ').filter(Boolean);
-let initials = '';
-if (nameParts.length >= 2) {
-    initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
-} else if (userData.email) {
-    const emailUser = userData.email.split('@')[0].replace(/[0-9]/g, '');
-    const emailParts = emailUser.match(/[a-z]+/gi) || [];
-    initials = emailParts.length >= 2
-        ? (emailParts[0][0] + emailParts[1][0]).toUpperCase()
-        : emailUser.slice(0, 2).toUpperCase();
-} else {
-    initials = (userData.name || 'U').slice(0, 2).toUpperCase();
-}
-document.getElementById('userAvatar').textContent = initials;
+        let initials = '';
+        if (nameParts.length >= 2) {
+            initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+        } else if (userData.email) {
+            const emailUser = userData.email.split('@')[0].replace(/[0-9]/g, '');
+            const emailParts = emailUser.match(/[a-z]+/gi) || [];
+            initials = emailParts.length >= 2
+                ? (emailParts[0][0] + emailParts[1][0]).toUpperCase()
+                : emailUser.slice(0, 2).toUpperCase();
+        } else {
+            initials = (userData.name || 'U').slice(0, 2).toUpperCase();
+        }
+        document.getElementById('userAvatar').textContent = initials;
 
         if (userRole === 'tenant') {
-            // Swap Add Receipt button for Pay Now
-            const floatingContainer = document.querySelector('.floating-btn-container');
+            // Swap floating button to Pay Now
+            const floatingContainer = document.getElementById('floatingContainer');
             if (floatingContainer) {
                 floatingContainer.innerHTML = `
                     <button class="floating-btn" id="view-landlord-btn">
@@ -474,19 +655,21 @@ document.getElementById('userAvatar').textContent = initials;
                 document.getElementById('view-landlord-btn')
                     .addEventListener('click', () => landlordModal.classList.add('open'));
             }
-
             document.getElementById('tenants-btn').style.display      = 'none';
             document.getElementById('room-details-btn').style.display = 'none';
         }
     }
+
+    // Render header buttons after role is known
+    renderHeaderActions();
 }
 
-// ── Render a single receipt card ─────────────────────────────────────────────
+// ── Render a single receipt card ──────────────────────────────────────────
 function renderReceipt(docId, data, prepend = true) {
     if (document.querySelector(`[data-receipt-id="${docId}"]`)) return;
 
-    const card       = document.createElement('div');
-    card.className   = 'receipt-card';
+    const card     = document.createElement('div');
+    card.className = 'receipt-card';
     card.setAttribute('data-receipt-id', docId);
 
     const amount     = parseFloat(data.amount || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 });
@@ -496,9 +679,7 @@ function renderReceipt(docId, data, prepend = true) {
 
     card.innerHTML = `
         <div class="receipt-left">
-            <div class="receipt-icon">
-                <i class="fas fa-receipt"></i>
-            </div>
+            <div class="receipt-icon"><i class="fas fa-receipt"></i></div>
             <div class="receipt-info">
                 <div class="receipt-desc">${data.description || 'Receipt'}</div>
                 <div class="receipt-meta">${data.name || '—'} · ${data.date || '—'}</div>
@@ -526,7 +707,7 @@ function renderReceipt(docId, data, prepend = true) {
     updateCountBadge();
 }
 
-// ── Load all receipts ────────────────────────────────────────────────────────
+// ── Load all receipts ─────────────────────────────────────────────────────
 async function loadReceipts() {
     loadingWrap.style.display = 'flex';
     emptyWrap.style.display   = 'none';
@@ -540,9 +721,7 @@ async function loadReceipts() {
             emptyWrap.style.display = 'flex';
             return;
         }
-
         snapshot.forEach(doc => renderReceipt(doc.id, doc.data(), false));
-
     } catch (err) {
         loadingWrap.style.display = 'none';
         emptyWrap.style.display   = 'flex';
@@ -551,7 +730,7 @@ async function loadReceipts() {
     }
 }
 
-// ── Open Add modal ───────────────────────────────────────────────────────────
+// ── Add Receipt modal ─────────────────────────────────────────────────────
 addBtn.addEventListener('click', () => {
     editingId = null;
     document.getElementById('modal-title').textContent = 'Add Receipt';
@@ -565,7 +744,7 @@ addBtn.addEventListener('click', () => {
 cancelBtn.addEventListener('click', () => modal.classList.remove('open'));
 modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 
-// ── Open Edit modal ──────────────────────────────────────────────────────────
+// ── Edit modal ────────────────────────────────────────────────────────────
 function openEditModal(event) {
     event.preventDefault();
     const card = event.currentTarget.closest('.receipt-card');
@@ -581,7 +760,7 @@ function openEditModal(event) {
     modal.classList.add('open');
 }
 
-// ── Save (add or update) ─────────────────────────────────────────────────────
+// ── Save receipt ──────────────────────────────────────────────────────────
 saveBtn.addEventListener('click', async () => {
     const name   = document.getElementById('tenant-name').value.trim();
     const amount = document.getElementById('amount').value.trim();
@@ -600,9 +779,7 @@ saveBtn.addEventListener('click', async () => {
 
     try {
         if (editingId) {
-            // UPDATE
             await receiptsCol.doc(editingId).update({ name, amount, description: desc, status, date: now });
-
             const card = document.querySelector(`[data-receipt-id="${editingId}"]`);
             if (card) {
                 card.querySelector('.receipt-desc').textContent = desc;
@@ -614,21 +791,16 @@ saveBtn.addEventListener('click', async () => {
                     '₱' + parseFloat(amount).toLocaleString('en-PH', { minimumFractionDigits: 2 });
             }
             showToast('Receipt updated!', 'success');
-
         } else {
-            // ADD
             const docRef = await receiptsCol.add({
                 name, amount, description: desc, status, date: now,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
-
             emptyWrap.style.display = 'none';
             renderReceipt(docRef.id, { name, amount, description: desc, status, date: now });
             showToast('Receipt added!', 'success');
         }
-
         modal.classList.remove('open');
-
     } catch (err) {
         console.error('Firestore save error:', err);
         showToast('Failed to save receipt.', 'error');
@@ -638,7 +810,7 @@ saveBtn.addEventListener('click', async () => {
     }
 });
 
-// ── Delete ───────────────────────────────────────────────────────────────────
+// ── Delete receipt ────────────────────────────────────────────────────────
 async function deleteReceipt(event) {
     event.preventDefault();
     const card       = event.currentTarget.closest('.receipt-card');
@@ -663,7 +835,7 @@ async function deleteReceipt(event) {
     }, 300);
 }
 
-// ── Dropdown toggle ──────────────────────────────────────────────────────────
+// ── Dropdown toggle ───────────────────────────────────────────────────────
 function togglePaymentMenu(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -671,13 +843,145 @@ function togglePaymentMenu(event) {
     document.querySelectorAll('.dropdown-menu').forEach(m => { if (m !== menu) m.classList.remove('show'); });
     menu.classList.toggle('show');
 }
-
 document.addEventListener('click', e => {
     if (!e.target.closest('.action-menu'))
         document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
 });
 
-// ── Landlord modal ───────────────────────────────────────────────────────────
+// ── Upload Receipt (Tenant) ───────────────────────────────────────────────
+const dropZone    = document.getElementById('dropZone');
+const fileInput   = document.getElementById('fileInput');
+const previewWrap = document.getElementById('previewWrap');
+const previewImg  = document.getElementById('previewImg');
+
+fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) loadPreview(fileInput.files[0]);
+});
+
+document.getElementById('removeImg').addEventListener('click', clearPreview);
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) loadPreview(file);
+});
+
+function loadPreview(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+        uploadedImageData = e.target.result;
+        previewImg.src    = uploadedImageData;
+        previewWrap.style.display = 'block';
+        dropZone.style.display    = 'none';
+    };
+    reader.readAsDataURL(file);
+}
+
+function clearPreview() {
+    uploadedImageData             = null;
+    previewImg.src                = '';
+    previewWrap.style.display     = 'none';
+    dropZone.style.display        = 'block';
+    fileInput.value               = '';
+}
+
+document.getElementById('cancelUploadBtn').addEventListener('click', () => {
+    clearPreview();
+    document.getElementById('uploaderName').value = '';
+    document.getElementById('uploadNote').value   = '';
+    uploadOverlay.classList.remove('open');
+});
+
+uploadOverlay.addEventListener('click', e => { if (e.target === uploadOverlay) uploadOverlay.classList.remove('open'); });
+
+document.getElementById('submitUploadBtn').addEventListener('click', () => {
+    const name = document.getElementById('uploaderName').value.trim();
+    const note = document.getElementById('uploadNote').value.trim();
+
+    if (!uploadedImageData) { showToast('Please select an image.', 'error'); return; }
+    if (!name)              { showToast('Please enter your name.', 'error'); return; }
+
+    const submissions = getSubmissions();
+    submissions.unshift({
+        id: 's' + Date.now(),
+        name,
+        note: note || '(no note)',
+        imageData: uploadedImageData,
+        date: new Date().toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    });
+    saveSubmissions(submissions);
+
+    clearPreview();
+    document.getElementById('uploaderName').value = '';
+    document.getElementById('uploadNote').value   = '';
+    uploadOverlay.classList.remove('open');
+    showToast('Receipt submitted to landlord!', 'success');
+});
+
+// ── View Submitted (Landlord) ─────────────────────────────────────────────
+function openViewModal() {
+    const submissions = getSubmissions();
+    const listEl = document.getElementById('submittedList');
+    listEl.innerHTML = '';
+
+    if (!submissions.length) {
+        listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
+    } else {
+        submissions.forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'submitted-card';
+            card.setAttribute('data-sid', s.id);
+            card.innerHTML = `
+                <img class="submitted-img" src="${s.imageData}" alt="Receipt" data-sid="${s.id}">
+                <div class="submitted-info">
+                    <div class="submitted-tenant"><i class="fas fa-user" style="color:#2C96CD;margin-right:5px;font-size:11px"></i>${s.name}</div>
+                    <div class="submitted-note">${s.note}</div>
+                    <div class="submitted-date">${s.date}</div>
+                    <button class="submitted-dismiss" data-sid="${s.id}">✕ Dismiss</button>
+                </div>`;
+            listEl.appendChild(card);
+        });
+
+        // Image lightbox
+        listEl.querySelectorAll('.submitted-img').forEach(img => {
+            img.addEventListener('click', () => {
+                document.getElementById('lightboxImg').src = img.src;
+                lightbox.classList.add('open');
+            });
+        });
+
+        // Dismiss buttons
+        listEl.querySelectorAll('.submitted-dismiss').forEach(btn => {
+            btn.addEventListener('click', () => dismissSubmission(btn.getAttribute('data-sid')));
+        });
+    }
+
+    viewOverlay.classList.add('open');
+}
+
+function dismissSubmission(sid) {
+    const subs = getSubmissions().filter(x => x.id !== sid);
+    saveSubmissions(subs);
+    const card = document.querySelector(`[data-sid="${sid}"]`);
+    if (card) card.remove();
+    const listEl = document.getElementById('submittedList');
+    if (!listEl.children.length) {
+        listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
+    }
+    renderHeaderActions(); // refresh badge count
+    showToast('Receipt dismissed.', 'success');
+}
+
+document.getElementById('closeViewModal').addEventListener('click', () => viewOverlay.classList.remove('open'));
+viewOverlay.addEventListener('click', e => { if (e.target === viewOverlay) viewOverlay.classList.remove('open'); });
+
+// ── Lightbox ──────────────────────────────────────────────────────────────
+lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+
+// ── Landlord modal ────────────────────────────────────────────────────────
 document.getElementById('closeLandlordModal').addEventListener('click', () => landlordModal.classList.remove('open'));
 landlordModal.addEventListener('click', e => { if (e.target === landlordModal) landlordModal.classList.remove('open'); });
 
@@ -695,7 +999,7 @@ function copyToClipboard(elementId) {
     navigator.clipboard.writeText(text).then(() => showToast('Copied: ' + text, 'success'));
 }
 
-// ── Navigation ───────────────────────────────────────────────────────────────
+// ── Navigation ────────────────────────────────────────────────────────────
 document.getElementById('dashboard-btn')?.addEventListener('click',    () => window.location.href = 'dashboard.html');
 document.getElementById('tenants-btn')?.addEventListener('click',      () => window.location.href = 'tenants.html');
 document.getElementById('room-details-btn')?.addEventListener('click', () => window.location.href = 'room-details.html');
@@ -709,7 +1013,7 @@ document.getElementById('logout-btn')?.addEventListener('click', () => {
     }
 });
 
-// ── Init ─────────────────────────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadUserProfile();
     loadReceipts();
