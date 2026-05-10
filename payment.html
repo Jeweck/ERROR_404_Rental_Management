@@ -365,17 +365,13 @@
 </head>
 <body>
 <div class="dashboard-container">
-    <!-- Sidebar -->
-    <aside class="sidebar-dashboard">
+    <!-- Sidebar — rendered by JS based on role -->
+    <aside class="sidebar-dashboard" id="sidebarAside">
         <div class="sidebar-top">
             <div class="current-page-pill">Payment</div>
         </div>
-        <nav class="nav-menu">
-            <button class="nav-btn" id="dashboard-btn"><i class="fas fa-chart-line"></i> Dashboard</button>
-            <button class="nav-btn" id="tenants-btn"><i class="fas fa-users"></i> Tenants</button>
-            <button class="nav-btn" id="room-details-btn"><i class="fas fa-home"></i> Room Details</button>
-            <button class="nav-btn active" id="payment-btn"><i class="fas fa-credit-card"></i> Payment</button>
-            <button class="nav-btn" id="settings-btn"><i class="fas fa-cog"></i> Settings</button>
+        <nav class="nav-menu" id="sidebarNav">
+            <!-- Injected by JS -->
         </nav>
         <div class="sidebar-bottom">
             <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
@@ -404,7 +400,6 @@
                     <div class="payment-page-title">Receipts</div>
                     <span class="receipts-count-badge" id="receiptsCountBadge"></span>
                 </div>
-                <!-- Header action buttons (role-based) -->
                 <div class="header-actions" id="headerActions"></div>
             </div>
 
@@ -590,12 +585,43 @@ function updateCountBadge() {
     if (badge) badge.textContent = count + ' receipt' + (count !== 1 ? 's' : '');
 }
 
-// ── Submissions (localStorage — no Firebase) ──────────────────────────────
+// ── Submissions (localStorage) ────────────────────────────────────────────
 function getSubmissions() {
     try { return JSON.parse(localStorage.getItem('submittedReceipts') || '[]'); } catch(e) { return []; }
 }
 function saveSubmissions(arr) {
     localStorage.setItem('submittedReceipts', JSON.stringify(arr));
+}
+
+// ── Sidebar (role-based) ──────────────────────────────────────────────────
+function renderSidebar(role) {
+    const nav = document.getElementById('sidebarNav');
+    if (role === 'tenant') {
+        nav.innerHTML = `
+            <button class="nav-btn" id="dashboard-btn"><i class="fas fa-chart-line"></i> Dashboard</button>
+            <button class="nav-btn active" id="payment-btn"><i class="fas fa-credit-card"></i> Payment</button>
+            <button class="nav-btn" id="settings-btn"><i class="fas fa-cog"></i> Settings</button>`;
+    } else {
+        nav.innerHTML = `
+            <button class="nav-btn" id="dashboard-btn"><i class="fas fa-chart-line"></i> Dashboard</button>
+            <button class="nav-btn" id="tenants-btn"><i class="fas fa-users"></i> Tenants</button>
+            <button class="nav-btn" id="room-details-btn"><i class="fas fa-home"></i> Room Details</button>
+            <button class="nav-btn active" id="payment-btn"><i class="fas fa-credit-card"></i> Payment</button>
+            <button class="nav-btn" id="settings-btn"><i class="fas fa-cog"></i> Settings</button>`;
+
+        document.getElementById('tenants-btn')
+            .addEventListener('click', () => window.location.href = 'tenants.html');
+        document.getElementById('room-details-btn')
+            .addEventListener('click', () => window.location.href = 'room-details.html');
+    }
+
+    // ── Dashboard nav — goes to the RIGHT dashboard based on role ──
+    document.getElementById('dashboard-btn').addEventListener('click', () => {
+        window.location.href = role === 'tenant' ? 'dashboard-tenant.html' : 'dashboard.html';
+    });
+
+    document.getElementById('settings-btn')
+        .addEventListener('click', () => window.location.href = 'settings.html');
 }
 
 // ── Header actions (role-based) ───────────────────────────────────────────
@@ -610,7 +636,6 @@ function renderHeaderActions() {
             uploadOverlay.classList.add('open');
         });
     } else {
-        // Landlord: show "View Submitted" with badge
         const count = getSubmissions().length;
         const badgeHtml = count ? `<span class="submitted-badge">${count}</span>` : '';
         area.innerHTML = `
@@ -624,43 +649,43 @@ function renderHeaderActions() {
 // ── Load user profile ─────────────────────────────────────────────────────
 function loadUserProfile() {
     const userData = JSON.parse(localStorage.getItem('userData'));
-    if (userData) {
-        userRole = userData.role || 'landlord';
-        document.getElementById('userProfileName').textContent  = userData.username || userData.name || 'User Name';
-        document.getElementById('userProfileEmail').textContent = userData.email || 'user@email.com';
+    if (!userData) { window.location.replace('index.html'); return; }
 
-        const nameParts = (userData.name || '').trim().split(' ').filter(Boolean);
-        let initials = '';
-        if (nameParts.length >= 2) {
-            initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
-        } else if (userData.email) {
-            const emailUser = userData.email.split('@')[0].replace(/[0-9]/g, '');
-            const emailParts = emailUser.match(/[a-z]+/gi) || [];
-            initials = emailParts.length >= 2
-                ? (emailParts[0][0] + emailParts[1][0]).toUpperCase()
-                : emailUser.slice(0, 2).toUpperCase();
-        } else {
-            initials = (userData.name || 'U').slice(0, 2).toUpperCase();
-        }
-        document.getElementById('userAvatar').textContent = initials;
+    userRole = userData.role || 'landlord';
+    document.getElementById('userProfileName').textContent  = userData.username || userData.name || 'User Name';
+    document.getElementById('userProfileEmail').textContent = userData.email || 'user@email.com';
 
-        if (userRole === 'tenant') {
-            // Swap floating button to Pay Now
-            const floatingContainer = document.getElementById('floatingContainer');
-            if (floatingContainer) {
-                floatingContainer.innerHTML = `
-                    <button class="floating-btn" id="view-landlord-btn">
-                        <i class="fas fa-building"></i> Pay Now
-                    </button>`;
-                document.getElementById('view-landlord-btn')
-                    .addEventListener('click', () => landlordModal.classList.add('open'));
-            }
-            document.getElementById('tenants-btn').style.display      = 'none';
-            document.getElementById('room-details-btn').style.display = 'none';
+    const nameParts = (userData.name || '').trim().split(' ').filter(Boolean);
+    let initials = '';
+    if (nameParts.length >= 2) {
+        initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+    } else if (userData.email) {
+        const emailUser = userData.email.split('@')[0].replace(/[0-9]/g, '');
+        const emailParts = emailUser.match(/[a-z]+/gi) || [];
+        initials = emailParts.length >= 2
+            ? (emailParts[0][0] + emailParts[1][0]).toUpperCase()
+            : emailUser.slice(0, 2).toUpperCase();
+    } else {
+        initials = (userData.name || 'U').slice(0, 2).toUpperCase();
+    }
+    document.getElementById('userAvatar').textContent = initials;
+
+    // Render sidebar first (so nav buttons exist)
+    renderSidebar(userRole);
+
+    if (userRole === 'tenant') {
+        // Swap floating button to Pay Now
+        const floatingContainer = document.getElementById('floatingContainer');
+        if (floatingContainer) {
+            floatingContainer.innerHTML = `
+                <button class="floating-btn" id="view-landlord-btn">
+                    <i class="fas fa-building"></i> Pay Now
+                </button>`;
+            document.getElementById('view-landlord-btn')
+                .addEventListener('click', () => landlordModal.classList.add('open'));
         }
     }
 
-    // Render header buttons after role is known
     renderHeaderActions();
 }
 
@@ -945,7 +970,6 @@ function openViewModal() {
             listEl.appendChild(card);
         });
 
-        // Image lightbox
         listEl.querySelectorAll('.submitted-img').forEach(img => {
             img.addEventListener('click', () => {
                 document.getElementById('lightboxImg').src = img.src;
@@ -953,7 +977,6 @@ function openViewModal() {
             });
         });
 
-        // Dismiss buttons
         listEl.querySelectorAll('.submitted-dismiss').forEach(btn => {
             btn.addEventListener('click', () => dismissSubmission(btn.getAttribute('data-sid')));
         });
@@ -971,7 +994,7 @@ function dismissSubmission(sid) {
     if (!listEl.children.length) {
         listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
     }
-    renderHeaderActions(); // refresh badge count
+    renderHeaderActions();
     showToast('Receipt dismissed.', 'success');
 }
 
@@ -999,13 +1022,8 @@ function copyToClipboard(elementId) {
     navigator.clipboard.writeText(text).then(() => showToast('Copied: ' + text, 'success'));
 }
 
-// ── Navigation ────────────────────────────────────────────────────────────
-document.getElementById('dashboard-btn')?.addEventListener('click',    () => window.location.href = 'dashboard.html');
-document.getElementById('tenants-btn')?.addEventListener('click',      () => window.location.href = 'tenants.html');
-document.getElementById('room-details-btn')?.addEventListener('click', () => window.location.href = 'room-details.html');
-document.getElementById('settings-btn')?.addEventListener('click',     () => window.location.href = 'settings.html');
-
-document.getElementById('logout-btn')?.addEventListener('click', () => {
+// ── Logout ────────────────────────────────────────────────────────────────
+document.getElementById('logout-btn').addEventListener('click', () => {
     if (confirm('Are you sure you want to logout?')) {
         localStorage.removeItem('userData');
         localStorage.removeItem('rememberedEmail');

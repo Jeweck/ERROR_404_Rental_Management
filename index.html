@@ -981,7 +981,7 @@
 
                 if (rememberMe) localStorage.setItem('rememberedEmail', email);
                 else localStorage.removeItem('rememberedEmail');
-                window.location.href = 'dashboard.html';
+                window.location.href = userData.role === 'tenant' ? 'dashboard-tenant.html' : 'dashboard.html';
             } catch (error) {
                 loginError.textContent = error.message || 'Login failed. Please try again.';
                 loginError.classList.add('show');
@@ -1059,7 +1059,7 @@
 
                 alert(`Welcome ${fullName}! Registration successful as ${selectedRole}`);
                 registerModal.classList.remove('active');
-                window.location.href = 'dashboard.html';
+                window.location.href = selectedRole === 'tenant' ? 'dashboard-tenant.html' : 'dashboard.html';
             } catch (error) {
                 const errorMessage = document.getElementById('registerError');
                 if (error.code === 'auth/email-already-in-use') {

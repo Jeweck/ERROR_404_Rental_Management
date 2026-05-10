@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
         (function () { emailjs.init({ publicKey: "x_T6GklKHsRSBTox2" }); })();
@@ -23,7 +22,6 @@
             gap: 16px; width: 100vw; box-sizing: border-box;
             position: fixed; top: 0; left: 0; right: 0; z-index: 40;
         }
-
         .sidebar-dashboard { z-index: 50; }
         .dashboard-content { margin-top: 60px; }
 
@@ -32,34 +30,24 @@
             font-size: 18px; color: #333; padding: 4px;
             display: flex; align-items: center; position: relative;
         }
-
         .notification-badge {
             position: absolute; top: -4px; right: -6px;
             background: #ef4444; color: #fff; font-size: 10px; font-weight: 700;
             width: 18px; height: 18px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
         }
-
         .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
         .user-profile-info { display: flex; flex-direction: column; align-items: flex-start; }
         .user-profile-name { font-size: 13px; font-weight: 600; color: #333; }
         .user-profile-email { font-size: 11px; color: #888; }
 
         /* ── Stat cards ── */
-        .stats-container {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            padding: 24px 24px 0;
-        }
-
+        .stats-container { display: flex; flex-direction: column; gap: 14px; padding: 24px 24px 0; }
         .stat-card {
             background: #fff; border-radius: 12px;
             padding: 20px; border: 1px solid #e8e8e8;
             position: relative; overflow: hidden;
         }
-
         .stat-card-revenue {
             background: linear-gradient(135deg, #2C96CD 0%, #1e7aab 100%);
             border-color: transparent;
@@ -67,17 +55,114 @@
         .stat-card-revenue .stat-label { color: rgba(255,255,255,0.75); }
         .stat-card-revenue .stat-value { font-size: 38px; color: #fff; }
         .stat-card-revenue .stat-info  { color: rgba(255,255,255,0.6); }
-
-        .stats-row-three {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-        }
-
+        .stats-row-three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
         .stat-label { font-size: 12px; color: #999; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
         .stat-value { font-size: 28px; font-weight: 700; color: #1a1a1a; line-height: 1; }
         .stat-info  { font-size: 12px; color: #aaa; margin-top: 6px; }
-        .stat-value.loading { color: #ddd; font-size: 20px; }
+
+        /* ── Move-Out Request Management ── */
+        .requests-card {
+            background: #fff; border-radius: 12px; border: 1px solid #e8e8e8;
+            padding: 22px 24px; margin: 20px 24px 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .requests-card-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 18px; flex-wrap: wrap; gap: 10px;
+        }
+        .requests-card-title {
+            font-size: 15px; font-weight: 700; color: #1a1a1a;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .req-filter-tabs { display: flex; gap: 0; border-bottom: 2px solid #f0f0f0; margin-bottom: 18px; }
+        .req-filter-tab {
+            background: none; border: none; padding: 9px 16px;
+            font-size: 12px; font-weight: 600; color: #888; cursor: pointer;
+            border-bottom: 3px solid transparent; margin-bottom: -2px;
+            transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .req-filter-tab.active { color: #2C96CD; border-bottom-color: #2C96CD; }
+        .req-filter-tab .tab-count {
+            background: #f0f0f0; color: #888; font-size: 10px; font-weight: 700;
+            padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center;
+        }
+        .req-filter-tab.active .tab-count { background: #dbeeff; color: #2C96CD; }
+
+        .req-list { display: flex; flex-direction: column; gap: 12px; min-height: 80px; }
+        .req-item {
+            background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px;
+            padding: 16px; transition: border-color 0.2s;
+        }
+        .req-item:hover { border-color: #b5d8ef; }
+        .req-item-header {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 10px; margin-bottom: 10px; flex-wrap: wrap;
+        }
+        .req-item-left { display: flex; flex-direction: column; gap: 4px; }
+        .req-item-name { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+        .req-item-meta { font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .req-item-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+        .req-item-details { font-size: 12px; color: #666; line-height: 1.7; margin-bottom: 12px; }
+        .req-item-details strong { color: #444; }
+
+        /* Note field */
+        .req-note-wrap { margin-bottom: 12px; }
+        .req-note-input {
+            width: 100%; padding: 8px 12px; font-size: 12px;
+            border: 1.5px solid #e5e7eb; border-radius: 8px;
+            background: #fff; color: #222; outline: none;
+            transition: border 0.2s; font-family: inherit; resize: vertical; min-height: 60px;
+        }
+        .req-note-input:focus { border-color: #2C96CD; box-shadow: 0 0 0 3px rgba(44,150,205,0.08); }
+        .req-note-label { font-size: 11px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 5px; display: block; }
+
+        .req-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .req-btn {
+            border: none; border-radius: 8px; padding: 8px 16px;
+            font-size: 12px; font-weight: 700; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: all 0.2s;
+        }
+        .req-btn-approve { background: #dcfce7; color: #16a34a; }
+        .req-btn-approve:hover { background: #16a34a; color: #fff; }
+        .req-btn-reject  { background: #fee2e2; color: #dc2626; }
+        .req-btn-reject:hover  { background: #dc2626; color: #fff; }
+        .req-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Badges */
+        .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .badge-pending   { background: #fef3c7; color: #d97706; }
+        .badge-approved  { background: #dcfce7; color: #16a34a; }
+        .badge-rejected  { background: #fee2e2; color: #dc2626; }
+        .badge-completed { background: #e0f2fe; color: #0284c7; }
+        .badge-move-out  { background: #fce7f3; color: #be185d; }
+        .badge-transfer  { background: #ede9fe; color: #7c3aed; }
+
+        .landlord-note-display {
+            margin-top: 8px; padding: 8px 12px;
+            background: #f0f7ff; border-left: 3px solid #2C96CD;
+            border-radius: 0 8px 8px 0; font-size: 12px; color: #1e5f8a;
+        }
+        .landlord-note-display strong { font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; color: #2C96CD; display: block; margin-bottom: 2px; }
+
+        .req-empty { text-align: center; padding: 36px 20px; color: #bbb; font-size: 13px; }
+        .req-empty i { font-size: 30px; display: block; margin-bottom: 10px; color: #ddd; }
+        .req-loading { text-align: center; padding: 30px; color: #bbb; font-size: 13px; }
+
+        /* ── Recent payments table ── */
+        .table-card { background: #fff; border-radius: 12px; border: 1px solid #e8e8e8; padding: 20px; margin: 20px 24px 24px; }
+        .table-card h3 { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
+        .payment-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .payment-table th { text-align: left; padding: 9px 12px; font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid #f0f0f0; }
+        .payment-table td { padding: 12px; border-bottom: 1px solid #f5f5f5; color: #333; }
+        .payment-table tr:last-child td { border-bottom: none; }
+        .payment-table tbody tr:hover td { background: #fafafa; }
+        .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .paid    { background: #dcfce7; color: #16a34a; }
+        .pending { background: #fef3c7; color: #d97706; }
+        .overdue { background: #fee2e2; color: #dc2626; }
+        .table-loading { text-align: center; padding: 30px; color: #bbb; font-size: 13px; }
 
         /* ── Notification Modal ── */
         .notification-modal {
@@ -86,18 +171,15 @@
             align-items: center; justify-content: center; z-index: 500;
         }
         .notification-modal.open { display: flex; }
-
         .notification-modal-content {
             background: #fff; border-radius: 16px; padding: 28px;
             width: 100%; max-width: 500px; max-height: 80vh; overflow-y: auto;
             box-shadow: 0 8px 40px rgba(0,0,0,0.15);
         }
-
         .notification-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
         .notification-modal-title { font-size: 20px; font-weight: 700; color: #1a1a1a; }
         .notification-close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
         .notification-close-btn:hover { color: #333; }
-
         .notification-tabs { display: flex; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; }
         .notification-tab {
             background: none; border: none; padding: 12px 16px;
@@ -105,14 +187,11 @@
             border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s;
         }
         .notification-tab.active { color: #2C96CD; border-bottom-color: #2C96CD; }
-
         .notification-tab-content { display: none; }
         .notification-tab-content.active { display: block; }
-
         .notification-form { display: flex; flex-direction: column; gap: 14px; }
         .notification-form-group { display: flex; flex-direction: column; gap: 6px; }
         .notification-form-label { font-size: 12px; font-weight: 600; color: #666; }
-
         .notification-form-input,
         .notification-form-select,
         .notification-form-textarea {
@@ -124,16 +203,27 @@
         .notification-form-select:focus,
         .notification-form-textarea:focus { border-color: #2C96CD; }
         .notification-form-textarea { resize: vertical; min-height: 100px; }
-
         .notification-send-btn {
             background: #2C96CD; color: #fff; border: none; border-radius: 8px;
             padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
-            transition: background 0.2s; display: flex; align-items: center;
-            justify-content: center; gap: 8px;
+            transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .notification-send-btn:hover { background: #1e7aab; }
         .notification-send-btn:disabled { background: #ccc; cursor: not-allowed; }
 
+        .notification-list { display: flex; flex-direction: column; gap: 12px; }
+        .notification-item { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; transition: all 0.2s; }
+        .notification-item:hover { background: #f3f4f6; border-color: #2C96CD; }
+        .notification-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .notification-item-sender { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+        .notification-item-time { font-size: 11px; color: #999; }
+        .notification-item-purpose { display: inline-block; background: #2C96CD; color: #fff; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; }
+        .notification-item-description { font-size: 12px; color: #666; line-height: 1.4; }
+        .notification-empty-state { text-align: center; padding: 30px 20px; color: #999; font-size: 13px; }
+        .notification-empty-state i { font-size: 30px; margin-bottom: 10px; display: block; color: #ddd; }
+        .notification-loading { text-align: center; padding: 20px; color: #999; font-size: 13px; }
+
+        /* ── Toast ── */
         .toast {
             position: fixed; bottom: 30px; right: 30px; background: #1a1a1a; color: #fff;
             padding: 14px 20px; border-radius: 10px; font-size: 13px; font-weight: 500;
@@ -146,58 +236,8 @@
         .toast.success i { color: #22c55e; }
         .toast.error i { color: #ef4444; }
 
-        .notification-list { display: flex; flex-direction: column; gap: 12px; }
-        .notification-item {
-            background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;
-            padding: 14px; transition: all 0.2s;
-        }
-        .notification-item:hover { background: #f3f4f6; border-color: #2C96CD; }
-        .notification-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-        .notification-item-sender { font-size: 13px; font-weight: 600; color: #1a1a1a; }
-        .notification-item-time { font-size: 11px; color: #999; }
-        .notification-item-purpose { display: inline-block; background: #2C96CD; color: #fff; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; }
-        .notification-item-description { font-size: 12px; color: #666; line-height: 1.4; }
-        .notification-empty-state { text-align: center; padding: 30px 20px; color: #999; font-size: 13px; }
-        .notification-empty-state i { font-size: 30px; margin-bottom: 10px; display: block; color: #ddd; }
-        .notification-loading { text-align: center; padding: 20px; color: #999; font-size: 13px; }
-
         @keyframes spin { to { transform: rotate(360deg); } }
         .fa-spin { animation: spin 0.8s linear infinite; }
-
-        /* Recent payments table */
-        .table-card { background: #fff; border-radius: 12px; border: 1px solid #e8e8e8; padding: 20px; margin: 20px 24px 24px; }
-        .table-card h3 { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
-
-        .payment-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .payment-table th { text-align: left; padding: 9px 12px; font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid #f0f0f0; }
-        .payment-table td { padding: 12px; border-bottom: 1px solid #f5f5f5; color: #333; }
-        .payment-table tr:last-child td { border-bottom: none; }
-        .payment-table tbody tr:hover td { background: #fafafa; }
-
-        .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-        .paid    { background: #dcfce7; color: #16a34a; }
-        .pending { background: #fef3c7; color: #d97706; }
-        .overdue { background: #fee2e2; color: #dc2626; }
-
-        .table-loading { text-align: center; padding: 30px; color: #bbb; font-size: 13px; }
-
-        /* Charts */
-        .charts-container { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; padding: 20px 24px 0; }
-        .chart-card { background: #fff; border-radius: 12px; border: 1px solid #e8e8e8; padding: 20px; }
-        .chart-card h3 { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
-        .chart-subtitle { font-size: 11px; color: #aaa; margin: 0 0 14px 0; }
-        .chart-placeholder { height: 200px; position: relative; }
-
-        .occupancy-card { display: flex; flex-direction: column; }
-        .occupancy-info { display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
-        .occupancy-percentage { font-size: 42px; font-weight: 800; color: #2C96CD; }
-        .occupancy-details { display: flex; gap: 16px; }
-        .occupancy-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #555; }
-        .occupancy-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-        .occupancy-dot.occupied { background: #2C96CD; }
-        .occupancy-dot.vacant { background: #e5e7eb; }
-        .occupancy-bar { background: #e5e7eb; border-radius: 20px; height: 10px; overflow: hidden; }
-        .occupied-bar { background: #2C96CD; height: 100%; border-radius: 20px; transition: width 0.5s; }
     </style>
 </head>
 <body class="dashboard-body">
@@ -228,7 +268,7 @@
                 <span class="notification-badge" id="notificationBadge" style="display:none;">0</span>
             </button>
             <div class="user-profile">
-<div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:#2C96CD;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:0.03em;"></div>
+                <div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:#2C96CD;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:0.03em;"></div>
                 <div class="user-profile-info">
                     <div class="user-profile-name" id="userProfileName">User Name</div>
                     <div class="user-profile-email" id="userProfileEmail">user@email.com</div>
@@ -247,7 +287,6 @@
                     </div>
                     <div class="stat-info" id="statRevenueInfo">from paid receipts</div>
                 </div>
-
                 <div class="stats-row-three">
                     <div class="stat-card">
                         <div class="stat-label">Active Tenants</div>
@@ -273,33 +312,42 @@
                 </div>
             </div>
 
-            <!-- Charts -->
-            <div class="charts-container">
-                <div class="chart-card">
-                    <h3>Revenue Trend (6 Months)</h3>
-                    <p class="chart-subtitle" id="chartSubtitle">Loading...</p>
-                    <div class="chart-placeholder">
-                        <canvas id="revenueChart"></canvas>
+            <!-- ── Move-Out / Transfer Requests Management ── -->
+            <div class="requests-card">
+                <div class="requests-card-header">
+                    <div class="requests-card-title">
+                        <i class="fas fa-door-open" style="color:#2C96CD;"></i>
+                        Move-Out / Room Transfer Requests
+                        <span id="pendingCountBadge" class="badge badge-pending" style="display:none;"></span>
                     </div>
                 </div>
-                <div class="chart-card occupancy-card">
-                    <h3>Occupancy Rate</h3>
-                    <div class="occupancy-info">
-                        <div class="occupancy-percentage" id="occupancyPct">—</div>
-                        <div class="occupancy-details">
-                            <div class="occupancy-item">
-                                <span class="occupancy-dot occupied"></span><span>Occupied</span>
-                            </div>
-                            <div class="occupancy-item">
-                                <span class="occupancy-dot vacant"></span><span>Vacant</span>
-                            </div>
-                        </div>
-                        <div class="occupancy-chart">
-                            <div class="occupancy-bar">
-                                <div class="occupied-bar" id="occupancyBar" style="width:0%;"></div>
-                            </div>
-                        </div>
-                    </div>
+
+                <div class="req-filter-tabs">
+                    <button class="req-filter-tab active" data-filter="Pending">
+                        <i class="fas fa-clock"></i> Pending
+                        <span class="tab-count" id="countPending">0</span>
+                    </button>
+                    <button class="req-filter-tab" data-filter="Approved">
+                        <i class="fas fa-check-circle"></i> Approved
+                        <span class="tab-count" id="countApproved">0</span>
+                    </button>
+                    <button class="req-filter-tab" data-filter="Rejected">
+                        <i class="fas fa-times-circle"></i> Rejected
+                        <span class="tab-count" id="countRejected">0</span>
+                    </button>
+                    <button class="req-filter-tab" data-filter="All">
+                        <i class="fas fa-list"></i> All
+                        <span class="tab-count" id="countAll">0</span>
+                    </button>
+                </div>
+
+                <div class="req-loading" id="reqLoading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading requests…
+                </div>
+                <div class="req-list" id="reqList" style="display:none;"></div>
+                <div class="req-empty" id="reqEmpty" style="display:none;">
+                    <i class="fas fa-clipboard-check"></i>
+                    No requests found.
                 </div>
             </div>
 
@@ -395,17 +443,13 @@
 <!-- Toast -->
 <div class="toast" id="toast">
     <i class="fas fa-check-circle"></i>
-    <span id="toastMsg">Message sent!</span>
+    <span id="toastMsg">Done!</span>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- Use compat SDK to match payment.html so Firestore timestamps are consistent -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 <script>
-// ── Firebase Init (compat — same as payment.html) ─────────────────────────
+// ── Firebase ──────────────────────────────────────────────────────────────
 const firebaseConfig = {
     apiKey:            "AIzaSyAGd7Aaiu_d-VIokG16gapCZOlpGheb9tY",
     authDomain:        "rentalmangemnetsystem.firebaseapp.com",
@@ -415,7 +459,6 @@ const firebaseConfig = {
     appId:             "1:143952534193:web:1a0dc97e5e0f10fde16090",
     measurementId:     "G-8HXJE3259V"
 };
-
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -425,35 +468,42 @@ const EMAILJS_TEMPLATE_ID = "template_zunhpi6";
 // ── Toast ─────────────────────────────────────────────────────────────────
 function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
-    const icon  = toast.querySelector('i');
     document.getElementById('toastMsg').textContent = message;
     toast.className = `toast ${type}`;
-    icon.className  = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+    toast.querySelector('i').className = type === 'success'
+        ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function formatDate(ts) {
+    if (!ts) return '—';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' });
 }
 
 // ── User Profile ──────────────────────────────────────────────────────────
 function loadUserProfile() {
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (!userData) { window.location.replace('index.html'); return; }
-   document.getElementById('userProfileName').textContent = userData.username || userData.name || 'User Name'
-document.getElementById('userProfileEmail').textContent = userData.email || 'user@email.com';
+    document.getElementById('userProfileName').textContent = userData.username || userData.name || 'User Name';
+    document.getElementById('userProfileEmail').textContent = userData.email || 'user@email.com';
 
-const nameParts = (userData.name || '').trim().split(' ').filter(Boolean);
-let initials = '';
-if (nameParts.length >= 2) {
-    initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
-} else if (userData.email) {
-    const emailUser = userData.email.split('@')[0].replace(/[0-9]/g, '');
-    const emailParts = emailUser.match(/[a-z]+/gi) || [];
-    initials = emailParts.length >= 2
-        ? (emailParts[0][0] + emailParts[1][0]).toUpperCase()
-        : emailUser.slice(0, 2).toUpperCase();
-} else {
-    initials = (userData.name || 'U').slice(0, 2).toUpperCase();
-}
-document.getElementById('userAvatar').textContent = initials;
+    const nameParts = (userData.name || '').trim().split(' ').filter(Boolean);
+    let initials = '';
+    if (nameParts.length >= 2) {
+        initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+    } else if (userData.email) {
+        const emailUser = userData.email.split('@')[0].replace(/[0-9]/g, '');
+        const emailParts = emailUser.match(/[a-z]+/gi) || [];
+        initials = emailParts.length >= 2
+            ? (emailParts[0][0] + emailParts[1][0]).toUpperCase()
+            : emailUser.slice(0, 2).toUpperCase();
+    } else {
+        initials = (userData.name || 'U').slice(0, 2).toUpperCase();
+    }
+    document.getElementById('userAvatar').textContent = initials;
+
     if (userData.role === 'tenant') {
         document.getElementById('tenants-btn').style.display      = 'none';
         document.getElementById('room-details-btn').style.display = 'none';
@@ -463,69 +513,211 @@ document.getElementById('userAvatar').textContent = initials;
 // ── Dashboard Stats ───────────────────────────────────────────────────────
 async function loadDashboardStats() {
     try {
-        // 1. Tenants
-        const tenantsSnap  = await db.collection('tenants').get();
-        let activeTenants  = 0;
-        let overdueTenants = 0;
+        const tenantsSnap = await db.collection('tenants').get();
+        let activeTenants = 0, overdueTenants = 0;
         tenantsSnap.forEach(d => {
             const s = d.data().status;
             if (s === 'Active')  activeTenants++;
             if (s === 'Overdue') overdueTenants++;
         });
 
-        // 2. Rooms
         const roomsSnap = await db.collection('rooms').get();
-        let totalRooms  = 0;
-        let vacantRooms = 0;
+        let totalRooms = 0, vacantRooms = 0;
         roomsSnap.forEach(d => {
             totalRooms++;
             const t = (d.data().tenant || '').toString().trim();
             if (!t || t.toLowerCase() === 'vacant') vacantRooms++;
         });
 
-        const occupiedRooms = totalRooms - vacantRooms;
-        const occupancyPct  = totalRooms > 0 ? Math.round((occupiedRooms / totalRooms) * 100) : 0;
-
-        // 3. Receipts — ALL-TIME paid total
         const receiptsSnap = await db.collection('receipts').get();
-        let totalRevenue   = 0;
-        let paidCount      = 0;
+        let totalRevenue = 0, paidCount = 0;
         receiptsSnap.forEach(d => {
             const r = d.data();
-            if (r.status === 'paid') {
-                totalRevenue += parseFloat(r.amount) || 0;
-                paidCount++;
-            }
+            if (r.status === 'paid') { totalRevenue += parseFloat(r.amount) || 0; paidCount++; }
         });
 
-        // ── Update DOM ────────────────────────────────────────────────────
         document.getElementById('statRevenue').textContent =
             '₱' + totalRevenue.toLocaleString('en-PH', { minimumFractionDigits: 2 });
         document.getElementById('statRevenueInfo').textContent =
             paidCount + ' paid receipt' + (paidCount !== 1 ? 's' : '') + ' (all-time)';
-
         document.getElementById('statActiveTenants').textContent = activeTenants;
         document.getElementById('statActiveTenantsInfo').textContent =
             tenantsSnap.size + ' total tenant' + (tenantsSnap.size !== 1 ? 's' : '');
-
         document.getElementById('statVacant').textContent = vacantRooms;
         document.getElementById('statVacantInfo').textContent =
             totalRooms + ' total room' + (totalRooms !== 1 ? 's' : '');
-
         document.getElementById('statOverdue').textContent = overdueTenants;
         document.getElementById('statOverdueInfo').textContent =
             overdueTenants > 0 ? 'requires attention' : 'all payments on time';
-
-        document.getElementById('occupancyPct').textContent = occupancyPct + '%';
-        document.getElementById('occupancyBar').style.width = occupancyPct + '%';
-
     } catch (err) {
-        console.error('Stats load error:', err);
+        console.error('Stats error:', err);
         ['statRevenue','statActiveTenants','statVacant','statOverdue'].forEach(id => {
             document.getElementById(id).textContent = '—';
         });
     }
 }
+
+// ── Move-Out / Transfer Requests ──────────────────────────────────────────
+let allRequests = [];
+let currentFilter = 'Pending';
+
+async function loadMoveOutRequests() {
+    const loading = document.getElementById('reqLoading');
+    const list    = document.getElementById('reqList');
+    const empty   = document.getElementById('reqEmpty');
+
+    loading.style.display = 'block';
+    list.style.display    = 'none';
+    empty.style.display   = 'none';
+
+    try {
+        const snap = await db.collection('moveOutRequests')
+            .orderBy('createdAt', 'desc')
+            .get();
+
+        allRequests = [];
+        snap.forEach(doc => allRequests.push({ id: doc.id, ...doc.data() }));
+
+        // Update tab counts
+        const counts = { Pending: 0, Approved: 0, Rejected: 0 };
+        allRequests.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
+        document.getElementById('countPending').textContent  = counts.Pending;
+        document.getElementById('countApproved').textContent = counts.Approved;
+        document.getElementById('countRejected').textContent = counts.Rejected;
+        document.getElementById('countAll').textContent      = allRequests.length;
+
+        // Pending badge on title
+        const pb = document.getElementById('pendingCountBadge');
+        if (counts.Pending > 0) {
+            pb.textContent   = counts.Pending + ' pending';
+            pb.style.display = 'inline-flex';
+        } else {
+            pb.style.display = 'none';
+        }
+
+        loading.style.display = 'none';
+        renderRequests();
+    } catch (err) {
+        console.error('Requests error:', err);
+        loading.style.display = 'none';
+        empty.style.display   = 'block';
+    }
+}
+
+function renderRequests() {
+    const list  = document.getElementById('reqList');
+    const empty = document.getElementById('reqEmpty');
+
+    const filtered = currentFilter === 'All'
+        ? allRequests
+        : allRequests.filter(r => r.status === currentFilter);
+
+    list.innerHTML = '';
+
+    if (!filtered.length) {
+        list.style.display  = 'none';
+        empty.style.display = 'block';
+        return;
+    }
+
+    empty.style.display = 'none';
+    list.style.display  = 'flex';
+
+    filtered.forEach(r => {
+        const el = document.createElement('div');
+        el.className = 'req-item';
+        el.dataset.id = r.id;
+
+        const statusClass = {
+            'Pending':   'badge-pending',
+            'Approved':  'badge-approved',
+            'Rejected':  'badge-rejected',
+            'Completed': 'badge-completed'
+        }[r.status] || 'badge-pending';
+
+        const typeIcon  = r.requestType === 'Move-Out' ? 'fa-door-open' : 'fa-exchange-alt';
+        const typeBadge = r.requestType === 'Move-Out' ? 'badge-move-out' : 'badge-transfer';
+        const isPending = r.status === 'Pending';
+
+        el.innerHTML = `
+            <div class="req-item-header">
+                <div class="req-item-left">
+                    <div class="req-item-name">
+                        <i class="fas fa-user" style="color:#2C96CD;margin-right:5px;font-size:12px;"></i>
+                        ${r.tenantName || '—'}
+                    </div>
+                    <div class="req-item-meta">
+                        <span class="badge ${typeBadge}"><i class="fas ${typeIcon}" style="margin-right:3px;font-size:9px;"></i>${r.requestType}</span>
+                        <span>Room: <strong>${r.currentRoom || '—'}</strong></span>
+                        <span>Move Date: <strong>${r.preferredMoveDate || '—'}</strong></span>
+                        <span style="color:#bbb;">${formatDate(r.createdAt)}</span>
+                    </div>
+                </div>
+                <div class="req-item-right">
+                    <span class="badge ${statusClass}">${r.status}</span>
+                </div>
+            </div>
+            <div class="req-item-details">
+                <strong>Reason:</strong> ${r.reason || '—'}
+                ${r.additionalNotes ? `<br><strong>Notes:</strong> ${r.additionalNotes}` : ''}
+            </div>
+            ${r.landlordNote && !isPending ? `
+            <div class="landlord-note-display">
+                <strong><i class="fas fa-comment-dots"></i> Your Note</strong>
+                ${r.landlordNote}
+            </div>` : ''}
+            ${isPending ? `
+            <div class="req-note-wrap">
+                <label class="req-note-label">Note to Tenant (optional)</label>
+                <textarea class="req-note-input" id="note-${r.id}" placeholder="Add a note explaining your decision…"></textarea>
+            </div>
+            <div class="req-actions">
+                <button class="req-btn req-btn-approve" onclick="handleRequest('${r.id}', 'Approved')">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+                <button class="req-btn req-btn-reject" onclick="handleRequest('${r.id}', 'Rejected')">
+                    <i class="fas fa-times"></i> Reject
+                </button>
+            </div>` : ''}`;
+
+        list.appendChild(el);
+    });
+}
+
+async function handleRequest(docId, newStatus) {
+    const noteEl = document.getElementById('note-' + docId);
+    const note   = noteEl ? noteEl.value.trim() : '';
+
+    // Disable buttons to prevent double-click
+    const item    = document.querySelector(`.req-item[data-id="${docId}"]`);
+    const buttons = item ? item.querySelectorAll('.req-btn') : [];
+    buttons.forEach(b => b.disabled = true);
+
+    try {
+        await db.collection('moveOutRequests').doc(docId).update({
+            status:       newStatus,
+            landlordNote: note,
+            updatedAt:    firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        showToast(`Request ${newStatus.toLowerCase()} successfully.`, 'success');
+        await loadMoveOutRequests(); // Refresh list
+    } catch (err) {
+        console.error('Update error:', err);
+        showToast('Failed to update request: ' + err.message, 'error');
+        buttons.forEach(b => b.disabled = false);
+    }
+}
+
+// Filter tabs
+document.querySelectorAll('.req-filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        currentFilter = tab.dataset.filter;
+        document.querySelectorAll('.req-filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderRequests();
+    });
+});
 
 // ── Recent Receipts ───────────────────────────────────────────────────────
 async function loadRecentReceipts() {
@@ -541,134 +733,29 @@ async function loadRecentReceipts() {
             .get();
 
         loading.style.display = 'none';
-
         if (snap.empty) { empty.style.display = 'block'; return; }
 
         table.style.display = 'table';
         tbody.innerHTML = '';
         snap.forEach(d => {
-            const r        = d.data();
-            const amount   = parseFloat(r.amount || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 });
-            const badgeCls = r.status === 'paid' ? 'paid' : r.status === 'overdue' ? 'overdue' : 'pending';
-            const badgeLbl = r.status === 'paid' ? 'PAID' : r.status === 'overdue' ? 'OVERDUE' : 'PENDING';
-            const tr       = document.createElement('tr');
+            const r      = d.data();
+            const amount = parseFloat(r.amount || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 });
+            const cls    = r.status === 'paid' ? 'paid' : r.status === 'overdue' ? 'overdue' : 'pending';
+            const lbl    = r.status === 'paid' ? 'PAID' : r.status === 'overdue' ? 'OVERDUE' : 'PENDING';
+            const tr     = document.createElement('tr');
             tr.innerHTML = `
                 <td>${r.date || '—'}</td>
                 <td>${r.name || '—'}</td>
                 <td>${r.description || '—'}</td>
                 <td>₱${amount}</td>
-                <td><span class="status-badge ${badgeCls}">${badgeLbl}</span></td>`;
+                <td><span class="status-badge ${cls}">${lbl}</span></td>`;
             tbody.appendChild(tr);
         });
-
     } catch (err) {
-        console.error('Recent receipts error:', err);
+        console.error('Receipts error:', err);
         loading.style.display = 'none';
         empty.style.display   = 'block';
     }
-}
-
-// ── Revenue Chart ─────────────────────────────────────────────────────────
-// Receipts are saved with:
-//   date      — string like "May 7, 2026"  (from toLocaleDateString)
-//   createdAt — Firestore ServerTimestamp
-// We use createdAt (most reliable). Fall back to parsing the date string.
-async function loadRevenueChart() {
-    const now     = new Date();
-    const months  = [];
-    const amounts = [];
-
-    for (let i = 5; i >= 0; i--) {
-        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-        months.push(d.toLocaleString('en-PH', { month: 'short', year: '2-digit' }));
-        amounts.push(0);
-    }
-
-    try {
-        const snap = await db.collection('receipts').get();
-
-        snap.forEach(d => {
-            const r = d.data();
-            if (r.status !== 'paid') return;
-
-            let parsedDate = null;
-
-            // 1. Firestore Timestamp (most accurate — set by serverTimestamp())
-            if (r.createdAt && typeof r.createdAt.toDate === 'function') {
-                parsedDate = r.createdAt.toDate();
-            }
-            // 2. Fall back to the human-readable date string e.g. "May 7, 2026"
-            else if (r.date && typeof r.date === 'string') {
-                parsedDate = new Date(r.date);
-            }
-
-            if (!parsedDate || isNaN(parsedDate.getTime())) return;
-
-            // Match to one of the 6 month buckets
-            for (let i = 0; i < 6; i++) {
-                const bucket = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
-                if (
-                    parsedDate.getMonth()    === bucket.getMonth() &&
-                    parsedDate.getFullYear() === bucket.getFullYear()
-                ) {
-                    amounts[i] += parseFloat(r.amount) || 0;
-                    break;
-                }
-            }
-        });
-
-    } catch (err) {
-        console.error('Revenue chart error:', err);
-    }
-
-    const sixMonthTotal = amounts.reduce((a, b) => a + b, 0);
-    document.getElementById('chartSubtitle').textContent =
-        '6-month total: ₱' + sixMonthTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 });
-
-    const ctx = document.getElementById('revenueChart');
-    if (!ctx) return;
-
-    if (window._revenueChartInstance) window._revenueChartInstance.destroy();
-
-    window._revenueChartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: months,
-            datasets: [{
-                label: 'Revenue',
-                data: amounts,
-                borderColor: '#2C96CD',
-                backgroundColor: 'rgba(44,150,205,0.08)',
-                tension: 0.4, fill: true,
-                pointBackgroundColor: '#2C96CD',
-                pointBorderColor: '#fff', pointBorderWidth: 2,
-                pointRadius: 5, pointHoverRadius: 7
-            }]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: ctx =>
-                            '₱' + ctx.parsed.y.toLocaleString('en-PH', { minimumFractionDigits: 2 }),
-                        footer: items =>
-                            'Total: ₱' + items.reduce((a, i) => a + i.parsed.y, 0)
-                                .toLocaleString('en-PH', { minimumFractionDigits: 2 })
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { callback: v => '₱' + v.toLocaleString('en-PH') },
-                    grid: { color: 'rgba(0,0,0,0.04)' }
-                },
-                x: { grid: { display: false } }
-            }
-        }
-    });
 }
 
 // ── Notification Modal ────────────────────────────────────────────────────
@@ -705,56 +792,45 @@ document.getElementById('notificationForm').addEventListener('submit', async e =
     if (!recipientEmail || !recipientName || !purpose || !description) {
         showToast('Please fill in all fields.', 'error'); return;
     }
-
-    sendBtn.disabled = true;
+    sendBtn.disabled  = true;
     sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
     try {
         const userData = JSON.parse(localStorage.getItem('userData')) || {};
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            to_email:   recipientEmail,
-            to_name:    recipientName,
-            from_name:  userData.name  || 'Rental Management System',
+            to_email: recipientEmail, to_name: recipientName,
+            from_name: userData.name || 'Rental Management System',
             from_email: userData.email || '',
-            purpose,
-            from_role:  userData.role  || '',
-            message:    description,
-            reply_to:   userData.email || ''
+            purpose, from_role: userData.role || '',
+            message: description, reply_to: userData.email || ''
         });
-
         await db.collection('messages').add({
-            sender:        userData.name  || 'Unknown',
-            senderEmail:   userData.email || '',
-            senderRole:    userData.role  || 'unknown',
-            recipient:     recipientEmail,
-            recipientName, purpose, description,
-            timestamp:     firebase.firestore.FieldValue.serverTimestamp(),
-            read:          false
+            sender: userData.name || 'Unknown', senderEmail: userData.email || '',
+            senderRole: userData.role || 'unknown',
+            recipient: recipientEmail, recipientName, purpose, description,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(), read: false
         });
-
         showToast('Message sent successfully!', 'success');
         document.getElementById('recipientInput').value     = '';
         document.getElementById('recipientNameInput').value = '';
         document.getElementById('purposeSelect').value      = '';
         document.getElementById('descriptionInput').value   = '';
-
     } catch (error) {
         showToast('Failed to send: ' + (error.text || error.message || 'Unknown error'), 'error');
     }
-
-    sendBtn.disabled = false;
+    sendBtn.disabled  = false;
     sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
 });
 
 async function loadInboxMessages() {
-    const userData     = JSON.parse(localStorage.getItem('userData')) || {};
-    const inboxLoading = document.getElementById('inboxLoading');
-    const list         = document.getElementById('notificationList');
-    const inboxEmpty   = document.getElementById('inboxEmpty');
+    const userData   = JSON.parse(localStorage.getItem('userData')) || {};
+    const loading    = document.getElementById('inboxLoading');
+    const list       = document.getElementById('notificationList');
+    const inboxEmpty = document.getElementById('inboxEmpty');
 
-    inboxLoading.style.display = 'block';
-    list.style.display         = 'none';
-    inboxEmpty.style.display   = 'none';
+    loading.style.display  = 'block';
+    list.style.display     = 'none';
+    inboxEmpty.style.display = 'none';
 
     try {
         const identifiers = [userData.email, userData.name].filter(Boolean);
@@ -763,22 +839,19 @@ async function loadInboxMessages() {
             .orderBy('timestamp', 'desc')
             .get();
 
-        inboxLoading.style.display = 'none';
-
+        loading.style.display = 'none';
         if (snap.empty) {
             inboxEmpty.style.display = 'block';
             document.getElementById('notificationBadge').style.display = 'none';
             return;
         }
 
-        list.innerHTML     = '';
+        list.innerHTML = '';
         list.style.display = 'flex';
-
         snap.forEach(doc => {
             const msg  = doc.data();
             const time = msg.timestamp
-                ? new Date(msg.timestamp.toDate()).toLocaleString('en-PH')
-                : 'Just now';
+                ? new Date(msg.timestamp.toDate()).toLocaleString('en-PH') : 'Just now';
             const el = document.createElement('div');
             el.className = 'notification-item';
             el.innerHTML = `
@@ -798,11 +871,10 @@ async function loadInboxMessages() {
         const badge = document.getElementById('notificationBadge');
         badge.textContent   = snap.size;
         badge.style.display = 'flex';
-
     } catch (error) {
         console.error('Inbox error:', error);
-        inboxLoading.style.display = 'none';
-        inboxEmpty.style.display   = 'block';
+        loading.style.display    = 'none';
+        inboxEmpty.style.display = 'block';
     }
 }
 
@@ -824,11 +896,9 @@ document.getElementById('logout-btn')?.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     loadUserProfile();
     loadDashboardStats();
+    loadMoveOutRequests();
     loadRecentReceipts();
-    loadRevenueChart();
 });
 </script>
-
-
 </body>
 </html>

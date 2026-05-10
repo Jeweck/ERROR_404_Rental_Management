@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="685667950_851931460606770_7624076952502804008_n-removebg-preview.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Management System - Tenant Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () { emailjs.init({ publicKey: "x_T6GklKHsRSBTox2" }); })();
+    </script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; color: #1a1a1a; }
+
+        /* ── Layout ── */
+        .dashboard-container { display: flex; min-height: 100vh; }
+
+        /* ── Header ── */
+        .dashboard-header {
+            display: flex; align-items: center; justify-content: flex-end;
+            padding: 14px 24px; background: #fff; border-bottom: 1px solid #f0f0f0;
+            gap: 16px; position: fixed; top: 0; left: 220px; right: 0; z-index: 40;
+        }
+        .notification-btn {
+            background: none; border: none; cursor: pointer;
+            font-size: 18px; color: #333; padding: 4px;
+            display: flex; align-items: center; position: relative;
+        }
+        .notification-badge {
+            position: absolute; top: -4px; right: -6px;
+            background: #ef4444; color: #fff; font-size: 10px; font-weight: 700;
+            width: 18px; height: 18px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .user-profile-info { display: flex; flex-direction: column; align-items: flex-start; }
+        .user-profile-name { font-size: 13px; font-weight: 600; color: #333; }
+        .user-profile-email { font-size: 11px; color: #888; }
+
+        /* ── Main ── */
+        .dashboard-content {
+            margin-left: 220px; margin-top: 60px; padding: 28px 28px 40px;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* ── Section title ── */
+        .section-title {
+            font-size: 16px; font-weight: 700; color: #1a1a1a;
+            margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+        }
+
+        /* ── Panel shared ── */
+        .panel {
+            background: #fff; border-radius: 14px; border: 1px solid #e8e8e8;
+            padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        /* ── Inbox ── */
+        .inbox-list {
+            display: flex; flex-direction: column; gap: 10px;
+            max-height: 340px; overflow-y: auto;
+        }
+        .inbox-list::-webkit-scrollbar { width: 4px; }
+        .inbox-list::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 4px; }
+
+        .inbox-item {
+            background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px;
+            padding: 14px; transition: all 0.2s;
+        }
+        .inbox-item:hover { background: #f0f7ff; border-color: #2C96CD; }
+        .inbox-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+        .inbox-item-sender { font-size: 13px; font-weight: 600; color: #1a1a1a; display: flex; align-items: center; gap: 6px; }
+        .inbox-item-time { font-size: 11px; color: #999; white-space: nowrap; }
+        .inbox-item-purpose {
+            display: inline-block; background: #2C96CD; color: #fff;
+            font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px;
+        }
+        .inbox-item-desc { font-size: 12px; color: #555; line-height: 1.5; }
+
+        .inbox-empty { text-align: center; padding: 36px 20px; color: #bbb; font-size: 13px; }
+        .inbox-empty i { font-size: 30px; display: block; margin-bottom: 10px; color: #ddd; }
+        .state-loading { text-align: center; padding: 24px; color: #bbb; font-size: 13px; }
+
+        /* ── Request Panel Tabs ── */
+        .request-tabs {
+            display: flex; gap: 0; margin-bottom: 22px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .request-tab {
+            background: none; border: none; padding: 10px 18px;
+            font-size: 13px; font-weight: 600; color: #888; cursor: pointer;
+            border-bottom: 3px solid transparent; margin-bottom: -2px;
+            transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+        }
+        .request-tab:hover { color: #555; }
+        .request-tab.active { color: #2C96CD; border-bottom-color: #2C96CD; }
+        .request-tab-content { display: none; }
+        .request-tab-content.active { display: block; }
+
+        /* ── Form ── */
+        .req-form { display: flex; flex-direction: column; gap: 18px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label {
+            font-size: 11px; font-weight: 700; color: #666;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .form-input, .form-select, .form-textarea {
+            padding: 10px 14px; font-size: 13px;
+            border: 1.5px solid #e5e7eb; border-radius: 10px;
+            background: #fff; color: #222; outline: none;
+            transition: border 0.2s; font-family: inherit;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: #2C96CD; box-shadow: 0 0 0 3px rgba(44,150,205,0.08);
+        }
+        .form-textarea { resize: vertical; min-height: 90px; }
+
+        .submit-btn {
+            background: #2C96CD; color: #fff; border: none; border-radius: 10px;
+            padding: 12px 26px; font-size: 13px; font-weight: 700; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: background 0.2s, transform 0.1s; align-self: flex-start;
+        }
+        .submit-btn:hover { background: #1e7aab; transform: translateY(-1px); }
+        .submit-btn:active { transform: translateY(0); }
+        .submit-btn:disabled { background: #c5d8e8; cursor: not-allowed; transform: none; }
+
+        /* ── Alert ── */
+        .alert {
+            padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 500;
+            display: flex; align-items: flex-start; gap: 10px; line-height: 1.4;
+        }
+        .alert i { margin-top: 1px; flex-shrink: 0; }
+        .alert-warning { background: #fef9ec; color: #92400e; border: 1px solid #fde68a; }
+
+        /* ── History ── */
+        .history-list { display: flex; flex-direction: column; gap: 12px; }
+        .history-item {
+            background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px;
+            transition: border-color 0.2s;
+        }
+        .history-item:hover { border-color: #c9dde9; }
+        .history-item-header {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+            flex-wrap: wrap; gap: 8px;
+        }
+        .history-item-type { font-size: 14px; font-weight: 700; color: #1a1a1a; display: flex; align-items: center; gap: 8px; }
+        .history-item-date { font-size: 11px; color: #999; }
+        .history-item-details { font-size: 12px; color: #666; line-height: 1.7; }
+        .history-item-details strong { color: #444; }
+
+        .landlord-note {
+            margin-top: 10px; padding: 10px 12px;
+            background: #f0f7ff; border-left: 3px solid #2C96CD;
+            border-radius: 0 8px 8px 0; font-size: 12px; color: #1e5f8a;
+        }
+        .landlord-note strong { display: block; margin-bottom: 2px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: #2C96CD; }
+
+        .history-empty { text-align: center; padding: 36px 20px; color: #bbb; font-size: 13px; }
+        .history-empty i { font-size: 30px; display: block; margin-bottom: 10px; color: #ddd; }
+
+        /* ── Badges ── */
+        .badge {
+            display: inline-flex; align-items: center; padding: 3px 10px;
+            border-radius: 20px; font-size: 11px; font-weight: 700;
+        }
+        .badge-pending   { background: #fef3c7; color: #d97706; }
+        .badge-approved  { background: #dcfce7; color: #16a34a; }
+        .badge-rejected  { background: #fee2e2; color: #dc2626; }
+        .badge-completed { background: #e0f2fe; color: #0284c7; }
+        .badge-move-out  { background: #fce7f3; color: #be185d; }
+        .badge-transfer  { background: #ede9fe; color: #7c3aed; }
+
+        /* ── Notification Modal ── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.35);
+            align-items: center; justify-content: center; z-index: 500;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-content {
+            background: #fff; border-radius: 16px; padding: 28px;
+            width: 100%; max-width: 500px; max-height: 80vh; overflow-y: auto;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+        }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+        .modal-title { font-size: 18px; font-weight: 700; color: #1a1a1a; display: flex; align-items: center; gap: 8px; }
+        .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #bbb; line-height: 1; }
+        .modal-close:hover { color: #333; }
+
+        .notif-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; }
+        .notif-tab {
+            background: none; border: none; padding: 10px 16px;
+            font-size: 13px; font-weight: 600; color: #888; cursor: pointer;
+            border-bottom: 3px solid transparent; margin-bottom: -2px;
+            transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+        }
+        .notif-tab.active { color: #2C96CD; border-bottom-color: #2C96CD; }
+        .notif-tab-content { display: none; }
+        .notif-tab-content.active { display: block; }
+
+        .notif-form { display: flex; flex-direction: column; gap: 14px; }
+        .notif-form-group { display: flex; flex-direction: column; gap: 5px; }
+        .notif-form-label { font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 0.04em; }
+        .notif-form-input, .notif-form-select, .notif-form-textarea {
+            padding: 10px 12px; font-size: 13px;
+            border: 1.5px solid #e5e7eb; border-radius: 8px;
+            background: #fff; color: #222; outline: none;
+            transition: border 0.2s; font-family: inherit;
+        }
+        .notif-form-input:focus, .notif-form-select:focus, .notif-form-textarea:focus {
+            border-color: #2C96CD; box-shadow: 0 0 0 3px rgba(44,150,205,0.08);
+        }
+        .notif-form-textarea { resize: vertical; min-height: 100px; }
+        .notif-send-btn {
+            background: #2C96CD; color: #fff; border: none; border-radius: 8px;
+            padding: 12px; font-size: 13px; font-weight: 700; cursor: pointer;
+            transition: background 0.2s; display: flex; align-items: center;
+            justify-content: center; gap: 8px;
+        }
+        .notif-send-btn:hover { background: #1e7aab; }
+        .notif-send-btn:disabled { background: #c5d8e8; cursor: not-allowed; }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed; bottom: 30px; right: 30px; background: #1a1a1a; color: #fff;
+            padding: 14px 20px; border-radius: 10px; font-size: 13px; font-weight: 500;
+            display: flex; align-items: center; gap: 10px; z-index: 9999;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            transform: translateY(80px); opacity: 0;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success i { color: #22c55e; }
+        .toast.error   i { color: #ef4444; }
+
+        /* ── Responsive ── */
+        @media (max-width: 700px) {
+            .dashboard-content { margin-left: 60px; padding: 16px; }
+            .dashboard-header { left: 60px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+
+    <!-- SIDEBAR — matches payment.html exactly (JS-injected) -->
+    <aside class="sidebar-dashboard" id="sidebarAside">
+        <div class="sidebar-top">
+            <div class="current-page-pill">Dashboard</div>
+        </div>
+        <nav class="nav-menu" id="sidebarNav">
+            <!-- Injected by JS -->
+        </nav>
+        <div class="sidebar-bottom">
+            <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="dashboard-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+            <button class="notification-btn" id="notificationBtn" title="Messages">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notificationBadge" style="display:none;">0</span>
+            </button>
+            <div class="user-profile">
+                <div id="userAvatar"
+                     style="width:32px;height:32px;border-radius:50%;background:#2C96CD;
+                            display:flex;align-items:center;justify-content:center;
+                            font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">
+                </div>
+                <div class="user-profile-info">
+                    <div class="user-profile-name" id="userProfileName">Tenant</div>
+                    <div class="user-profile-email" id="userProfileEmail">tenant@email.com</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ── Inbox Panel ── -->
+        <div class="panel">
+            <div class="section-title">
+                <i class="fas fa-inbox" style="color:#2C96CD;"></i>
+                My Inbox
+                <span id="inboxCount" style="font-size:12px;font-weight:500;color:#aaa;"></span>
+            </div>
+
+            <div class="state-loading" id="inboxLoading">
+                <i class="fas fa-spinner fa-spin"></i> Loading messages…
+            </div>
+            <div class="inbox-list" id="inboxList" style="display:none;"></div>
+            <div class="inbox-empty" id="inboxEmpty" style="display:none;">
+                <i class="fas fa-inbox"></i>
+                No messages yet
+            </div>
+        </div>
+
+        <!-- ── Move-Out / Room Transfer Request Panel ── -->
+        <div class="panel">
+            <div class="section-title">
+                <i class="fas fa-door-open" style="color:#2C96CD;"></i>
+                Move-Out / Room Transfer Request
+            </div>
+
+            <div class="request-tabs">
+                <button class="request-tab active" data-rtab="new-request">
+                    <i class="fas fa-plus-circle"></i> New Request
+                </button>
+                <button class="request-tab" data-rtab="history">
+                    <i class="fas fa-history"></i> Request History
+                </button>
+            </div>
+
+            <!-- New Request -->
+            <div class="request-tab-content active" id="new-requestTab">
+                <div id="pendingWarning" style="display:none;margin-bottom:18px;">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        You already have a pending request. Please wait for a response before submitting a new one.
+                    </div>
+                </div>
+
+                <form class="req-form" id="moveOutForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Request Type</label>
+                            <select class="form-select" id="requestType" required>
+                                <option value="">Select type…</option>
+                                <option value="Move-Out">Move-Out</option>
+                                <option value="Room Transfer">Room Transfer</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Preferred Move Date</label>
+                            <input type="date" class="form-input" id="preferredDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reason</label>
+                        <input type="text" class="form-input" id="reason"
+                               placeholder="e.g. Job relocation, personal reasons…" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Additional Notes <span style="font-weight:400;color:#aaa;text-transform:none;">(optional)</span></label>
+                        <textarea class="form-textarea" id="additionalNotes"
+                                  placeholder="Any other details for the landlord…"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submitRequestBtn">
+                        <i class="fas fa-paper-plane"></i> Submit Request
+                    </button>
+                </form>
+            </div>
+
+            <!-- History -->
+            <div class="request-tab-content" id="historyTab">
+                <div class="state-loading" id="historyLoading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading…
+                </div>
+                <div class="history-list" id="historyList" style="display:none;"></div>
+                <div class="history-empty" id="historyEmpty" style="display:none;">
+                    <i class="fas fa-clipboard-list"></i>
+                    No requests submitted yet.
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Notification Modal -->
+<div class="modal-overlay" id="notificationModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <i class="fas fa-bell" style="color:#2C96CD;"></i> Messages
+            </h2>
+            <button class="modal-close" id="notificationCloseBtn">&times;</button>
+        </div>
+
+        <div class="notif-tabs">
+            <button class="notif-tab active" data-ntab="send">
+                <i class="fas fa-paper-plane"></i> Send Message
+            </button>
+            <button class="notif-tab" data-ntab="modal-inbox">
+                <i class="fas fa-inbox"></i> Inbox
+            </button>
+        </div>
+
+        <!-- Send Tab -->
+        <div class="notif-tab-content active" id="sendTab">
+            <form class="notif-form" id="notificationForm">
+                <div class="notif-form-group">
+                    <label class="notif-form-label">Recipient Email</label>
+                    <input type="email" class="notif-form-input" id="recipientInput"
+                           placeholder="Enter email address" required>
+                </div>
+                <div class="notif-form-group">
+                    <label class="notif-form-label">Recipient Name</label>
+                    <input type="text" class="notif-form-input" id="recipientNameInput"
+                           placeholder="Enter recipient's name" required>
+                </div>
+                <div class="notif-form-group">
+                    <label class="notif-form-label">Purpose</label>
+                    <select class="notif-form-select" id="purposeSelect" required>
+                        <option value="">Select purpose...</option>
+                        <option value="Billing Confirmation">Billing Confirmation</option>
+                        <option value="Payment Reminder">Payment Reminder</option>
+                        <option value="Maintenance Schedule">Maintenance Schedule</option>
+                        <option value="Announcement">Announcement</option>
+                        <option value="Warning Notice">Warning Notice</option>
+                    </select>
+                </div>
+                <div class="notif-form-group">
+                    <label class="notif-form-label">Message</label>
+                    <textarea class="notif-form-textarea" id="descriptionInput"
+                              placeholder="Write your message..." required></textarea>
+                </div>
+                <button type="submit" class="notif-send-btn" id="sendBtn">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+        </div>
+
+        <!-- Inbox Tab (modal) -->
+        <div class="notif-tab-content" id="modal-inboxTab">
+            <div class="state-loading" id="modalInboxLoading">
+                <i class="fas fa-spinner fa-spin"></i> Loading...
+            </div>
+            <div class="inbox-list" id="modalInboxList" style="display:none;"></div>
+            <div class="inbox-empty" id="modalInboxEmpty" style="display:none;">
+                <i class="fas fa-inbox"></i> No messages yet
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMsg">Done!</span>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+
+// ── Firebase ──────────────────────────────────────────────────────────────
+const firebaseConfig = {
+    apiKey:            "AIzaSyAGd7Aaiu_d-VIokG16gapCZOlpGheb9tY",
+    authDomain:        "rentalmangemnetsystem.firebaseapp.com",
+    projectId:         "rentalmangemnetsystem",
+    storageBucket:     "rentalmangemnetsystem.firebasestorage.app",
+    messagingSenderId: "143952534193",
+    appId:             "1:143952534193:web:1a0dc97e5e0f10fde16090"
+};
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const EMAILJS_SERVICE_ID  = "service_n1bpczp";
+const EMAILJS_TEMPLATE_ID = "template_zunhpi6";
+
+// ── Toast ─────────────────────────────────────────────────────────────────
+function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = `toast ${type}`;
+    t.querySelector('i').className = type === 'success'
+        ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── Date Formatter ────────────────────────────────────────────────────────
+function formatDate(ts) {
+    if (!ts) return 'Just now';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' });
+}
+
+// ── Sidebar — matches payment.html renderSidebar exactly ─────────────────
+function renderSidebar() {
+    const nav = document.getElementById('sidebarNav');
+    nav.innerHTML = `
+        <button class="nav-btn active" id="dashboard-btn"><i class="fas fa-chart-line"></i> Dashboard</button>
+        <button class="nav-btn" id="payment-btn"><i class="fas fa-credit-card"></i> Payment</button>
+        <button class="nav-btn" id="settings-btn"><i class="fas fa-cog"></i> Settings</button>`;
+
+    document.getElementById('dashboard-btn').addEventListener('click', () => window.location.href = 'dashboard-tenant.html');
+    document.getElementById('payment-btn').addEventListener('click',   () => window.location.href = 'payment.html');
+    document.getElementById('settings-btn').addEventListener('click',  () => window.location.href = 'settings.html');
+}
+
+// ── User Profile ──────────────────────────────────────────────────────────
+let currentUser = null;
+
+function loadUserProfile() {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (!userData) { window.location.replace('index.html'); return; }
+    currentUser = userData;
+
+    document.getElementById('userProfileName').textContent  = userData.username || userData.name || 'Tenant';
+    document.getElementById('userProfileEmail').textContent = userData.email || 'tenant@email.com';
+
+    // Initials avatar
+    const nameParts = (userData.name || '').trim().split(' ').filter(Boolean);
+    let initials = '';
+    if (nameParts.length >= 2) {
+        initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+    } else if (userData.email) {
+        const eu = userData.email.split('@')[0].replace(/[0-9]/g, '');
+        const ep = eu.match(/[a-z]+/gi) || [];
+        initials = ep.length >= 2 ? (ep[0][0] + ep[1][0]).toUpperCase() : eu.slice(0, 2).toUpperCase();
+    } else {
+        initials = (userData.name || 'T').slice(0, 2).toUpperCase();
+    }
+    document.getElementById('userAvatar').textContent = initials;
+
+    // Render sidebar after profile is loaded
+    renderSidebar();
+}
+
+// ── Inbox (live) ──────────────────────────────────────────────────────────
+function buildInboxItem(msg) {
+    const el = document.createElement('div');
+    el.className = 'inbox-item';
+    el.innerHTML = `
+        <div class="inbox-item-header">
+            <span class="inbox-item-sender">
+                <i class="fas fa-user-circle" style="color:#2C96CD;"></i>
+                ${msg.sender || 'Unknown'}
+                <span style="font-weight:400;color:#aaa;font-size:11px;">(${msg.senderRole || ''})</span>
+            </span>
+            <span class="inbox-item-time">${formatDate(msg.timestamp)}</span>
+        </div>
+        <div class="inbox-item-purpose">${msg.purpose || ''}</div>
+        <div class="inbox-item-desc">${msg.description || ''}</div>`;
+    return el;
+}
+
+function loadInbox() {
+    const userData    = JSON.parse(localStorage.getItem('userData')) || {};
+    const loading     = document.getElementById('inboxLoading');
+    const list        = document.getElementById('inboxList');
+    const empty       = document.getElementById('inboxEmpty');
+    const badge       = document.getElementById('notificationBadge');
+    const countEl     = document.getElementById('inboxCount');
+    const identifiers = [userData.email, userData.name].filter(Boolean);
+
+    if (!identifiers.length) {
+        loading.style.display = 'none';
+        empty.style.display   = 'block';
+        return;
+    }
+
+    db.collection('messages')
+        .where('recipient', 'in', identifiers)
+        .orderBy('timestamp', 'desc')
+        .onSnapshot(snap => {
+            loading.style.display = 'none';
+            list.innerHTML = '';
+
+            if (snap.empty) {
+                empty.style.display = 'block';
+                list.style.display  = 'none';
+                badge.style.display = 'none';
+                countEl.textContent = '';
+                return;
+            }
+
+            empty.style.display = 'none';
+            list.style.display  = 'flex';
+            badge.textContent   = snap.size;
+            badge.style.display = 'flex';
+            countEl.textContent = `(${snap.size})`;
+
+            snap.forEach(doc => list.appendChild(buildInboxItem(doc.data())));
+        }, err => {
+            console.error('Inbox error:', err);
+            loading.style.display = 'none';
+            empty.style.display   = 'block';
+        });
+}
+
+// ── Modal Inbox ───────────────────────────────────────────────────────────
+function loadModalInbox() {
+    const userData    = JSON.parse(localStorage.getItem('userData')) || {};
+    const loading     = document.getElementById('modalInboxLoading');
+    const list        = document.getElementById('modalInboxList');
+    const empty       = document.getElementById('modalInboxEmpty');
+    const identifiers = [userData.email, userData.name].filter(Boolean);
+
+    loading.style.display = 'block';
+    list.style.display    = 'none';
+    empty.style.display   = 'none';
+
+    if (!identifiers.length) {
+        loading.style.display = 'none';
+        empty.style.display   = 'block';
+        return;
+    }
+
+    db.collection('messages')
+        .where('recipient', 'in', identifiers)
+        .orderBy('timestamp', 'desc')
+        .get()
+        .then(snap => {
+            loading.style.display = 'none';
+            if (snap.empty) { empty.style.display = 'block'; return; }
+            list.innerHTML = '';
+            list.style.display = 'flex';
+            snap.forEach(doc => list.appendChild(buildInboxItem(doc.data())));
+        })
+        .catch(() => { loading.style.display = 'none'; empty.style.display = 'block'; });
+}
+
+// ── Notification Modal ────────────────────────────────────────────────────
+document.getElementById('notificationBtn').addEventListener('click', () => {
+    document.getElementById('notificationModal').classList.add('open');
+    loadModalInbox();
+});
+document.getElementById('notificationCloseBtn').addEventListener('click', () =>
+    document.getElementById('notificationModal').classList.remove('open'));
+document.getElementById('notificationModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('notificationModal'))
+        document.getElementById('notificationModal').classList.remove('open');
+});
+
+document.querySelectorAll('.notif-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const name = tab.dataset.ntab;
+        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.notif-tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(name + 'Tab').classList.add('active');
+        if (name === 'modal-inbox') loadModalInbox();
+    });
+});
+
+// Send message form
+document.getElementById('notificationForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const recipientEmail = document.getElementById('recipientInput').value.trim();
+    const recipientName  = document.getElementById('recipientNameInput').value.trim();
+    const purpose        = document.getElementById('purposeSelect').value;
+    const description    = document.getElementById('descriptionInput').value.trim();
+    const sendBtn        = document.getElementById('sendBtn');
+
+    if (!recipientEmail || !recipientName || !purpose || !description) {
+        showToast('Please fill in all fields.', 'error'); return;
+    }
+
+    sendBtn.disabled  = true;
+    sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+    try {
+        const userData = JSON.parse(localStorage.getItem('userData')) || {};
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            to_email: recipientEmail, to_name: recipientName,
+            from_name: userData.name || 'Tenant', from_email: userData.email || '',
+            purpose, from_role: userData.role || 'tenant',
+            message: description, reply_to: userData.email || ''
+        });
+        await db.collection('messages').add({
+            sender: userData.name || 'Unknown', senderEmail: userData.email || '',
+            senderRole: userData.role || 'tenant',
+            recipient: recipientEmail, recipientName, purpose, description,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(), read: false
+        });
+        showToast('Message sent!', 'success');
+        document.getElementById('recipientInput').value     = '';
+        document.getElementById('recipientNameInput').value = '';
+        document.getElementById('purposeSelect').value      = '';
+        document.getElementById('descriptionInput').value   = '';
+    } catch (err) {
+        showToast('Failed: ' + (err.text || err.message || 'Unknown error'), 'error');
+    }
+
+    sendBtn.disabled  = false;
+    sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+});
+
+// ── Move-Out / Transfer Request ───────────────────────────────────────────
+let hasPendingRequest = false;
+
+async function checkPendingRequest() {
+    const userData = JSON.parse(localStorage.getItem('userData')) || {};
+    if (!userData.email) return;
+
+    const snap = await db.collection('moveOutRequests')
+        .where('tenantEmail', '==', userData.email)
+        .where('status', '==', 'Pending')
+        .get();
+
+    hasPendingRequest = !snap.empty;
+    document.getElementById('pendingWarning').style.display =
+        hasPendingRequest ? 'block' : 'none';
+
+    const btn = document.getElementById('submitRequestBtn');
+    btn.disabled  = hasPendingRequest;
+    btn.innerHTML = hasPendingRequest
+        ? '<i class="fas fa-clock"></i> Pending Request Exists'
+        : '<i class="fas fa-paper-plane"></i> Submit Request';
+}
+
+async function getTenantRoomInfo() {
+    const userData = JSON.parse(localStorage.getItem('userData')) || {};
+    if (!userData.email && !userData.name)
+        return { room: 'N/A', tenantId: userData.uid || '', tenantName: userData.name || '' };
+    try {
+        let snap = await db.collection('tenants').where('email', '==', userData.email).limit(1).get();
+        if (snap.empty && userData.name)
+            snap = await db.collection('tenants').where('name', '==', userData.name).limit(1).get();
+        if (!snap.empty) {
+            const d = snap.docs[0].data();
+            return { room: d.room || d.roomNumber || 'N/A', tenantId: snap.docs[0].id, tenantName: d.name || userData.name };
+        }
+    } catch(e) {}
+    return { room: 'N/A', tenantId: userData.uid || '', tenantName: userData.name || '' };
+}
+
+document.getElementById('moveOutForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (hasPendingRequest) { showToast('You already have a pending request.', 'error'); return; }
+
+    const requestType     = document.getElementById('requestType').value;
+    const preferredDate   = document.getElementById('preferredDate').value;
+    const reason          = document.getElementById('reason').value.trim();
+    const additionalNotes = document.getElementById('additionalNotes').value.trim();
+
+    if (!requestType || !preferredDate || !reason) {
+        showToast('Please fill in all required fields.', 'error'); return;
+    }
+
+    const btn     = document.getElementById('submitRequestBtn');
+    btn.disabled  = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting…';
+
+    try {
+        const userData = JSON.parse(localStorage.getItem('userData')) || {};
+        const { room, tenantId, tenantName } = await getTenantRoomInfo();
+
+        await db.collection('moveOutRequests').add({
+            tenantId,
+            tenantName:        tenantName || userData.name || 'Unknown',
+            tenantEmail:       userData.email || '',
+            currentRoom:       room,
+            requestType,
+            preferredMoveDate: preferredDate,
+            reason,
+            additionalNotes,
+            status:            'Pending',
+            createdAt:         firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        showToast('Request submitted successfully!', 'success');
+        document.getElementById('moveOutForm').reset();
+        hasPendingRequest = true;
+        document.getElementById('pendingWarning').style.display = 'block';
+        btn.disabled  = true;
+        btn.innerHTML = '<i class="fas fa-clock"></i> Pending Request Exists';
+
+        document.querySelector('[data-rtab="history"]').click();
+        loadRequestHistory();
+    } catch (err) {
+        showToast('Failed to submit: ' + err.message, 'error');
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
+    }
+});
+
+// ── Request History ───────────────────────────────────────────────────────
+async function loadRequestHistory() {
+    const loading = document.getElementById('historyLoading');
+    const list    = document.getElementById('historyList');
+    const empty   = document.getElementById('historyEmpty');
+
+    loading.style.display = 'block';
+    list.style.display    = 'none';
+    empty.style.display   = 'none';
+    list.innerHTML        = '';
+
+    const userData = JSON.parse(localStorage.getItem('userData')) || {};
+    if (!userData.email) {
+        loading.style.display = 'none';
+        empty.style.display   = 'block';
+        return;
+    }
+
+    try {
+        const snap = await db.collection('moveOutRequests')
+            .where('tenantEmail', '==', userData.email)
+            .orderBy('createdAt', 'desc')
+            .get();
+
+        loading.style.display = 'none';
+        if (snap.empty) { empty.style.display = 'block'; return; }
+
+        list.style.display = 'flex';
+        snap.forEach(doc => {
+            const r  = doc.data();
+            const el = document.createElement('div');
+            el.className = 'history-item';
+
+            const statusClass = {
+                'Pending':   'badge-pending',
+                'Approved':  'badge-approved',
+                'Rejected':  'badge-rejected',
+                'Completed': 'badge-completed'
+            }[r.status] || 'badge-pending';
+
+            const typeIcon  = r.requestType === 'Move-Out' ? 'fa-door-open' : 'fa-exchange-alt';
+            const typeBadge = r.requestType === 'Move-Out' ? 'badge-move-out' : 'badge-transfer';
+
+            el.innerHTML = `
+                <div class="history-item-header">
+                    <div class="history-item-type">
+                        <i class="fas ${typeIcon}" style="color:#2C96CD;"></i>
+                        <span class="badge ${typeBadge}">${r.requestType}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <span class="badge ${statusClass}">${r.status}</span>
+                        <span class="history-item-date">${formatDate(r.createdAt)}</span>
+                    </div>
+                </div>
+                <div class="history-item-details">
+                    <strong>Room:</strong> ${r.currentRoom || '—'} &nbsp;|&nbsp;
+                    <strong>Preferred Date:</strong> ${r.preferredMoveDate || '—'}<br>
+                    <strong>Reason:</strong> ${r.reason || '—'}
+                    ${r.additionalNotes ? `<br><strong>Notes:</strong> ${r.additionalNotes}` : ''}
+                </div>
+                ${r.landlordNote ? `
+                <div class="landlord-note">
+                    <strong><i class="fas fa-comment-dots"></i> Landlord Note</strong>
+                    ${r.landlordNote}
+                </div>` : ''}`;
+            list.appendChild(el);
+        });
+    } catch (err) {
+        console.error('History error:', err);
+        loading.style.display = 'none';
+        empty.style.display   = 'block';
+    }
+}
+
+// ── Request Tabs ──────────────────────────────────────────────────────────
+document.querySelectorAll('.request-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const name = tab.dataset.rtab;
+        document.querySelectorAll('.request-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.request-tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(name + 'Tab').classList.add('active');
+        if (name === 'history') loadRequestHistory();
+    });
+});
+
+// ── Logout ────────────────────────────────────────────────────────────────
+document.getElementById('logout-btn').addEventListener('click', () => {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('userData');
+        window.location.href = 'index.html';
+    }
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    loadUserProfile();
+    loadInbox();
+    checkPendingRequest();
+    document.getElementById('preferredDate').min = new Date().toISOString().split('T')[0];
+});
+</script>
+</body>
+</html>
