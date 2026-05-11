@@ -322,7 +322,8 @@ document.addEventListener('click', (e) => {
 
 // ── Navigation ───────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('dashboard-btn')?.addEventListener('click',    () => window.location.href = 'dashboard.html');
+    // dashboard-btn is handled by renderSidebar() in settings.html
+    // based on role, so we do NOT set it here to avoid overwriting it.
     document.getElementById('tenants-btn')?.addEventListener('click',      () => window.location.href = 'tenants.html');
     document.getElementById('room-details-btn')?.addEventListener('click', () => window.location.href = 'room-details.html');
     document.getElementById('payment-btn')?.addEventListener('click',      () => window.location.href = 'payment.html');
@@ -337,7 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
 // ── DOM helpers ──────────────────────────────────────────────────────────────
 function setEl(id, val)       { const e = document.getElementById(id); if (e) e.textContent = val; }
 function setInputVal(id, val) { const e = document.getElementById(id); if (e) e.value = val; }
