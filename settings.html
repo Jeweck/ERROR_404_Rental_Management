@@ -230,7 +230,6 @@
     <!-- Main Content -->
     <main class="dashboard-content">
         <header class="dashboard-header">
-            <button class="notification-btn"><i class="fas fa-bell"></i></button>
             <div class="user-profile">
                 <div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:#2C96CD;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:0.03em;"></div>
                 <div class="user-profile-info">
@@ -279,37 +278,6 @@
                             </select>
                         </div>
                         <button class="s-save-btn" onclick="saveGeneral()">Save Changes</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Notifications -->
-            <div class="settings-card">
-                <div class="settings-card-header" onclick="toggleSection(this)">
-                    <span class="settings-card-header-title">Notifications</span>
-                    <i class="fas fa-chevron-up"></i>
-                </div>
-                <div class="settings-card-body">
-                    <div class="notif-row">
-                        <span class="notif-label">Email Notification for New Payment</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="notifEmailPayment" checked>
-                            <span class="toggle-track"></span>
-                        </label>
-                    </div>
-                    <div class="notif-row">
-                        <span class="notif-label">SMS Alert for Overdue Tenants (Requires API Key)</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="notifSmsOverdue" checked>
-                            <span class="toggle-track"></span>
-                        </label>
-                    </div>
-                    <div class="notif-row">
-                        <span class="notif-label">Receive Weekly Summary Reports</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="notifWeeklySummary" checked>
-                            <span class="toggle-track"></span>
-                        </label>
                     </div>
                 </div>
             </div>
