@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rental Management System - Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
         (function () { emailjs.init({ publicKey: "x_T6GklKHsRSBTox2" }); })();
@@ -16,11 +16,10 @@
         .dashboard-header {
             display: flex; align-items: center; justify-content: flex-end;
             padding: 14px 24px; background: #fff; border-bottom: 1px solid #f0f0f0;
-            gap: 16px; width: 100vw; box-sizing: border-box;
-            position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+            gap: 16px; box-sizing: border-box;
+            position: fixed; top: 0; left: 64px; right: 0; z-index: 40;
         }
-        .sidebar-dashboard { z-index: 50; }
-        .dashboard-content { margin-top: 60px; }
+        .dashboard-content { margin-top: 60px; margin-left: 64px; }
         .notification-btn { background: none; border: none; cursor: pointer; font-size: 18px; color: #333; padding: 4px; display: flex; align-items: center; position: relative; }
         .notification-badge { position: absolute; top: -4px; right: -6px; background: #ef4444; color: #fff; font-size: 10px; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
@@ -146,22 +145,6 @@
 </head>
 <body class="dashboard-body">
 <div class="dashboard-container">
-
-    <aside class="sidebar-dashboard">
-        <div class="sidebar-top">
-            <div class="current-page-pill" id="currentPageName">Dashboard</div>
-        </div>
-        <nav class="nav-menu">
-            <button class="nav-btn active" id="dashboard-btn"><i class="fas fa-chart-line"></i> Dashboard</button>
-            <button class="nav-btn" id="tenants-btn"><i class="fas fa-users"></i> Tenants</button>
-            <button class="nav-btn" id="room-details-btn"><i class="fas fa-home"></i> Room Details</button>
-            <button class="nav-btn" id="payment-btn"><i class="fas fa-credit-card"></i> Payment</button>
-            <button class="nav-btn" id="settings-btn"><i class="fas fa-cog"></i> Settings</button>
-        </nav>
-        <div class="sidebar-bottom">
-            <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        </div>
-    </aside>
 
     <main class="dashboard-content">
         <header class="dashboard-header">
@@ -298,6 +281,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="sidebar.js"></script>
 <script>
 const firebaseConfig = {
     apiKey: "AIzaSyAGd7Aaiu_d-VIokG16gapCZOlpGheb9tY",
@@ -343,10 +327,6 @@ function loadUserProfile() {
         initials = ep.length >= 2 ? (ep[0][0] + ep[1][0]).toUpperCase() : eu.slice(0, 2).toUpperCase();
     } else { initials = (userData.name || 'U').slice(0, 2).toUpperCase(); }
     document.getElementById('userAvatar').textContent = initials;
-    if (userData.role === 'tenant') {
-        document.getElementById('tenants-btn').style.display = 'none';
-        document.getElementById('room-details-btn').style.display = 'none';
-    }
 }
 
 async function loadDashboardStats() {
@@ -373,7 +353,6 @@ async function loadDashboardStats() {
     }
 }
 
-// ── Move-Out Requests ─────────────────────────────────────────────────────
 let allRequests = [];
 let currentFilter = 'Pending';
 
@@ -455,45 +434,30 @@ function renderRequests() {
     });
 }
 
-// ── KEY FIX: handleRequest now also writes to tenant's messages ───────────
 async function handleRequest(docId, newStatus, tenantEmail, tenantName, requestType) {
     const noteEl  = document.getElementById('note-' + docId);
     const note    = noteEl ? noteEl.value.trim() : '';
     const item    = document.querySelector(`.req-item[data-id="${docId}"]`);
     const buttons = item ? item.querySelectorAll('.req-btn') : [];
     buttons.forEach(b => b.disabled = true);
-
     try {
         const landlordData = JSON.parse(localStorage.getItem('userData')) || {};
-
-        // 1. Update the request document
         await db.collection('moveOutRequests').doc(docId).update({
-            status:       newStatus,
-            landlordNote: note,
-            updatedAt:    firebase.firestore.FieldValue.serverTimestamp()
+            status: newStatus, landlordNote: note,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-
-        // 2. ── Write a message to the tenant's inbox ──────────────────
-        //    This is what makes the tenant receive the notification.
         if (tenantEmail) {
             const purposeLabel = newStatus === 'Approved' ? 'Request Approved' : 'Request Rejected';
             const msgBody = newStatus === 'Approved'
                 ? `Your ${requestType} request has been approved.${note ? ' Note from landlord: ' + note : ''}`
                 : `Your ${requestType} request has been rejected.${note ? ' Reason from landlord: ' + note : ''}`;
-
             await db.collection('messages').add({
-                sender:      landlordData.name || 'Landlord',
-                senderEmail: landlordData.email || '',
-                senderRole:  'landlord',
-                recipient:   tenantEmail,
-                recipientName: tenantName || 'Tenant',
-                purpose:     purposeLabel,
-                description: msgBody,
-                timestamp:   firebase.firestore.FieldValue.serverTimestamp(),
-                read:        false
+                sender: landlordData.name || 'Landlord', senderEmail: landlordData.email || '',
+                senderRole: 'landlord', recipient: tenantEmail, recipientName: tenantName || 'Tenant',
+                purpose: purposeLabel, description: msgBody,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(), read: false
             });
         }
-
         showToast(`Request ${newStatus.toLowerCase()} successfully.`, 'success');
         await loadMoveOutRequests();
     } catch(err) {
@@ -534,7 +498,6 @@ async function loadRecentReceipts() {
     } catch(err) { loading.style.display='none'; empty.style.display='block'; }
 }
 
-// ── Notification Modal ────────────────────────────────────────────────────
 document.getElementById('notificationBtn').addEventListener('click', () => {
     document.getElementById('notificationModal').classList.add('open'); loadInboxMessages();
 });
@@ -612,15 +575,6 @@ async function loadInboxMessages() {
         const badge=document.getElementById('notificationBadge'); badge.textContent=snap.size; badge.style.display='flex';
     } catch(error) { loading.style.display='none'; inboxEmpty.style.display='block'; }
 }
-
-document.getElementById('dashboard-btn')?.addEventListener('click',    () => window.location.href='dashboard.html');
-document.getElementById('tenants-btn')?.addEventListener('click',      () => window.location.href='tenants.html');
-document.getElementById('room-details-btn')?.addEventListener('click', () => window.location.href='room-details.html');
-document.getElementById('payment-btn')?.addEventListener('click',      () => window.location.href='payment.html');
-document.getElementById('settings-btn')?.addEventListener('click',     () => window.location.href='settings.html');
-document.getElementById('logout-btn')?.addEventListener('click', () => {
-    if (confirm('Are you sure you want to logout?')) { localStorage.removeItem('userData'); localStorage.removeItem('rememberedEmail'); window.location.href='index.html'; }
-});
 
 document.addEventListener('DOMContentLoaded', () => {
     loadUserProfile();

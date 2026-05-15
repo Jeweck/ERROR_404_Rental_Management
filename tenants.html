@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenants - Rental Management System</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -392,7 +392,6 @@
             if (!userData) {
                 window.location.replace('index.html');
             } else if (userData.role === 'tenant') {
-                // Tenants cannot access this page — redirect to dashboard
                 window.location.replace('dashboard.html');
             }
         } catch (e) {
@@ -402,35 +401,6 @@
 </script>
 
 <div class="dashboard-container">
-
-    <!-- Sidebar -->
-    <aside class="sidebar-dashboard">
-        <div class="sidebar-top">
-            <div class="current-page-pill" id="currentPageName">Tenants</div>
-        </div>
-        <nav class="nav-menu">
-            <button class="nav-btn dashboard-btn" id="dashboard-btn">
-                <i class="fas fa-chart-line"></i> Dashboard
-            </button>
-            <button class="nav-btn active" id="tenants-btn">
-                <i class="fas fa-users"></i> Tenants
-            </button>
-            <button class="nav-btn" id="room-details-btn">
-                <i class="fas fa-home"></i> Room Details
-            </button>
-            <button class="nav-btn" id="payment-btn">
-                <i class="fas fa-credit-card"></i> Payment
-            </button>
-            <button class="nav-btn" id="settings-btn">
-                <i class="fas fa-cog"></i> Settings
-            </button>
-        </nav>
-        <div class="sidebar-bottom">
-            <button class="logout-btn" id="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
-    </aside>
 
     <!-- Main Content -->
     <main class="dashboard-content">
@@ -630,22 +600,9 @@ document.getElementById('userAvatar').textContent = initials;
         }
     }
 
-    document.getElementById('dashboard-btn')?.addEventListener('click', () => window.location.href = 'dashboard.html');
-    document.getElementById('tenants-btn')?.addEventListener('click', () => window.location.href = 'tenants.html');
-    document.getElementById('room-details-btn')?.addEventListener('click', () => window.location.href = 'room-details.html');
-    document.getElementById('payment-btn')?.addEventListener('click', () => window.location.href = 'payment.html');
-    document.getElementById('settings-btn')?.addEventListener('click', () => window.location.href = 'settings.html');
-
-    document.getElementById('logout-btn')?.addEventListener('click', () => {
-        if (confirm('Are you sure you want to logout?')) {
-            localStorage.removeItem('userData');
-            localStorage.removeItem('rememberedEmail');
-            window.location.href = 'index.html';
-        }
-    });
-
     document.addEventListener('DOMContentLoaded', loadUserProfile);
 </script>
 <script type="module" src="tenants.js"></script>
+<script src="sidebar.js"></script>
 </body>
 </html>

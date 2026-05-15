@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="685667950_851931460606770_7624076952502804008_n-removebg-preview.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment and Billing - Rental Management</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; }
         body { margin: 0; padding: 0; }
@@ -365,18 +365,6 @@
 </head>
 <body>
 <div class="dashboard-container">
-    <!-- Sidebar — rendered by JS based on role -->
-    <aside class="sidebar-dashboard" id="sidebarAside">
-        <div class="sidebar-top">
-            <div class="current-page-pill">Payment</div>
-        </div>
-        <nav class="nav-menu" id="sidebarNav">
-            <!-- Injected by JS -->
-        </nav>
-        <div class="sidebar-bottom">
-            <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        </div>
-    </aside>
 
     <!-- Header -->
     <header class="dashboard-header">
@@ -592,37 +580,6 @@ function saveSubmissions(arr) {
     localStorage.setItem('submittedReceipts', JSON.stringify(arr));
 }
 
-// ── Sidebar (role-based) ──────────────────────────────────────────────────
-function renderSidebar(role) {
-    const nav = document.getElementById('sidebarNav');
-    if (role === 'tenant') {
-        nav.innerHTML = `
-            <button class="nav-btn" id="dashboard-btn"><i class="fas fa-chart-line"></i> Dashboard</button>
-            <button class="nav-btn active" id="payment-btn"><i class="fas fa-credit-card"></i> Payment</button>
-            <button class="nav-btn" id="settings-btn"><i class="fas fa-cog"></i> Settings</button>`;
-    } else {
-        nav.innerHTML = `
-            <button class="nav-btn" id="dashboard-btn"><i class="fas fa-chart-line"></i> Dashboard</button>
-            <button class="nav-btn" id="tenants-btn"><i class="fas fa-users"></i> Tenants</button>
-            <button class="nav-btn" id="room-details-btn"><i class="fas fa-home"></i> Room Details</button>
-            <button class="nav-btn active" id="payment-btn"><i class="fas fa-credit-card"></i> Payment</button>
-            <button class="nav-btn" id="settings-btn"><i class="fas fa-cog"></i> Settings</button>`;
-
-        document.getElementById('tenants-btn')
-            .addEventListener('click', () => window.location.href = 'tenants.html');
-        document.getElementById('room-details-btn')
-            .addEventListener('click', () => window.location.href = 'room-details.html');
-    }
-
-    // ── Dashboard nav — goes to the RIGHT dashboard based on role ──
-    document.getElementById('dashboard-btn').addEventListener('click', () => {
-        window.location.href = role === 'tenant' ? 'dashboard-tenant.html' : 'dashboard.html';
-    });
-
-    document.getElementById('settings-btn')
-        .addEventListener('click', () => window.location.href = 'settings.html');
-}
-
 // ── Header actions (role-based) ───────────────────────────────────────────
 function renderHeaderActions() {
     const area = document.getElementById('headerActions');
@@ -668,9 +625,6 @@ function loadUserProfile() {
         initials = (userData.name || 'U').slice(0, 2).toUpperCase();
     }
     document.getElementById('userAvatar').textContent = initials;
-
-    // Render sidebar first (so nav buttons exist)
-    renderSidebar(userRole);
 
     if (userRole === 'tenant') {
         // Swap floating button to Pay Now
@@ -1021,20 +975,12 @@ function copyToClipboard(elementId) {
     navigator.clipboard.writeText(text).then(() => showToast('Copied: ' + text, 'success'));
 }
 
-// ── Logout ────────────────────────────────────────────────────────────────
-document.getElementById('logout-btn').addEventListener('click', () => {
-    if (confirm('Are you sure you want to logout?')) {
-        localStorage.removeItem('userData');
-        localStorage.removeItem('rememberedEmail');
-        window.location.href = 'index.html';
-    }
-});
-
 // ── Init ──────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadUserProfile();
     loadReceipts();
 });
 </script>
+<script src="sidebar.js"></script>
 </body>
 </html>

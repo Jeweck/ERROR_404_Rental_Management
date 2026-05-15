@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rental Management System - Tenant Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
         (function () { emailjs.init({ publicKey: "x_T6GklKHsRSBTox2" }); })();
@@ -15,17 +15,33 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { overflow: hidden; height: 100%; font-family: 'Segoe UI', sans-serif; background: #f5f7fa; color: #1a1a1a; }
         .dashboard-container { display: flex; height: 100vh; overflow: hidden; }
-        :root { --sidebar-w: 230px; }
 
-        .sidebar-dashboard {
-            width: var(--sidebar-w) !important; min-width: var(--sidebar-w) !important; max-width: var(--sidebar-w) !important;
-            flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; overflow-y: auto; overflow-x: hidden;
-        }
+        /* ── Sidebar width variable — sidebar.js controls the actual sidebar,
+              we just react to its hover state via JS updating this variable ── */
+        :root { --sidebar-w: 64px; }
+
         .dashboard-header {
             display: flex; align-items: center; justify-content: flex-end;
             padding: 14px 24px; background: #fff; border-bottom: 1px solid #f0f0f0;
-            gap: 16px; position: fixed; top: 0; left: var(--sidebar-w); right: 0; z-index: 40; height: 60px;
+            gap: 16px; position: fixed; top: 0;
+            left: var(--sidebar-w); right: 0; z-index: 40; height: 60px;
+            transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .dashboard-content {
+            margin-left: var(--sidebar-w);
+            margin-top: 60px;
+            padding: 32px 40px 60px;
+            height: calc(100vh - 60px);
+            width: calc(100% - var(--sidebar-w));
+            overflow-y: auto; overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
+            scrollbar-width: none; -ms-overflow-style: none;
+            transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                        width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .dashboard-content::-webkit-scrollbar { display: none; }
+
         .notification-btn { background: none; border: none; cursor: pointer; font-size: 18px; color: #333; padding: 4px; display: flex; align-items: center; position: relative; }
         .notification-badge { position: absolute; top: -4px; right: -6px; background: #ef4444; color: #fff; font-size: 10px; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
@@ -33,13 +49,6 @@
         .user-profile-name { font-size: 13px; font-weight: 600; color: #333; }
         .user-profile-email { font-size: 11px; color: #888; }
 
-        .dashboard-content {
-            margin-left: var(--sidebar-w); margin-top: 60px; padding: 32px 40px 60px;
-            height: calc(100vh - 60px); width: calc(100% - var(--sidebar-w));
-            overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column;
-            align-items: center; scrollbar-width: none; -ms-overflow-style: none;
-        }
-        .dashboard-content::-webkit-scrollbar { display: none; }
         .content-inner { width: 100%; max-width: 820px; }
 
         .section-title { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
@@ -159,19 +168,11 @@
         .toast.approved i { color: #22c55e; }
         .toast.rejected i { color: #ef4444; }
 
-        @media (max-width: 700px) { :root { --sidebar-w: 60px; } .dashboard-content { padding: 16px; } .form-row { grid-template-columns: 1fr; } }
+        @media (max-width: 700px) { .dashboard-content { padding: 16px; } .form-row { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 <div class="dashboard-container">
-
-    <aside class="sidebar-dashboard" id="sidebarAside">
-        <div class="sidebar-top"><div class="current-page-pill">Dashboard</div></div>
-        <nav class="nav-menu" id="sidebarNav"></nav>
-        <div class="sidebar-bottom">
-            <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        </div>
-    </aside>
 
     <main class="dashboard-content">
         <header class="dashboard-header">
@@ -190,7 +191,7 @@
 
         <div class="content-inner">
 
-            <!-- Status alert banner — shows when landlord decides -->
+            <!-- Status alert banner -->
             <div class="status-alert" id="statusAlert">
                 <span class="status-alert-icon" id="statusAlertIcon"></span>
                 <div class="status-alert-body">
@@ -345,6 +346,23 @@ const db = firebase.firestore();
 const EMAILJS_SERVICE_ID  = "service_n1bpczp";
 const EMAILJS_TEMPLATE_ID = "template_zunhpi6";
 
+// ── Sidebar hover sync ────────────────────────────────────────────────────
+// sidebar.js injects the <aside> and handles its own CSS transition.
+// We just update --sidebar-w so .dashboard-header and .dashboard-content
+// shift in sync with the sidebar expand/collapse animation.
+function updateSidebarWidth(expanded) {
+    document.documentElement.style.setProperty('--sidebar-w', expanded ? '220px' : '64px');
+}
+
+document.addEventListener('mouseover', e => {
+    const sb = document.querySelector('.sidebar-dashboard');
+    if (sb && (sb === e.target || sb.contains(e.target))) updateSidebarWidth(true);
+});
+document.addEventListener('mouseout', e => {
+    const sb = document.querySelector('.sidebar-dashboard');
+    if (sb && !sb.contains(e.relatedTarget)) updateSidebarWidth(false);
+});
+
 // ── Helpers ───────────────────────────────────────────────────────────────
 function showToast(msg, type = 'success') {
     const t = document.getElementById('toast');
@@ -378,29 +396,6 @@ function showStatusAlert(status, requestType, landlordNote) {
 document.getElementById('statusAlertDismiss').addEventListener('click', () =>
     document.getElementById('statusAlert').classList.remove('show'));
 
-// ── Sidebar ───────────────────────────────────────────────────────────────
-function renderSidebar() {
-    const nav = document.getElementById('sidebarNav');
-    nav.innerHTML = `
-        <button class="nav-btn active" id="dashboard-btn"><i class="fas fa-chart-line"></i> Dashboard</button>
-        <button class="nav-btn" id="payment-btn"><i class="fas fa-credit-card"></i> Payment</button>
-        <button class="nav-btn" id="settings-btn"><i class="fas fa-cog"></i> Settings</button>`;
-    document.getElementById('dashboard-btn').addEventListener('click', () => window.location.href = 'dashboard-tenant.html');
-    document.getElementById('payment-btn').addEventListener('click',   () => window.location.href = 'payment.html');
-    document.getElementById('settings-btn').addEventListener('click',  () => window.location.href = 'settings.html');
-}
-function syncHeaderToSidebar() {
-    const sidebar = document.getElementById('sidebarAside');
-    const header  = document.querySelector('.dashboard-header');
-    const content = document.querySelector('.dashboard-content');
-    if (!sidebar || !header || !content) return;
-    const w = sidebar.offsetWidth + 'px';
-    header.style.left = w;
-    content.style.marginLeft = w;
-    content.style.width = `calc(100% - ${w})`;
-    document.documentElement.style.setProperty('--sidebar-w', w);
-}
-
 // ── User Profile ──────────────────────────────────────────────────────────
 let currentUser = null;
 
@@ -420,11 +415,6 @@ function loadUserProfile() {
         initials = ep.length >= 2 ? (ep[0][0] + ep[1][0]).toUpperCase() : eu.slice(0, 2).toUpperCase();
     } else { initials = (userData.name || 'T').slice(0, 2).toUpperCase(); }
     document.getElementById('userAvatar').textContent = initials;
-    renderSidebar();
-    requestAnimationFrame(() => {
-        syncHeaderToSidebar();
-        new ResizeObserver(syncHeaderToSidebar).observe(document.getElementById('sidebarAside'));
-    });
 }
 
 // ── Inbox ─────────────────────────────────────────────────────────────────
@@ -608,20 +598,14 @@ function renderHistory() {
     cachedDocs.forEach(r => list.appendChild(buildHistoryItem(r)));
 }
 
-// ── Real-time watcher — NO orderBy to avoid index/null issues ─────────────
 function startRequestWatcher() {
     const userData = JSON.parse(localStorage.getItem('userData')) || {};
     if (!userData.email) return;
     if (historyUnsubscribe) { historyUnsubscribe(); historyUnsubscribe = null; }
 
-    // ⚠️ Removed orderBy('createdAt') — it causes "Loading…" hang when some
-    //    docs have null createdAt (race condition with serverTimestamp).
-    //    We sort client-side instead.
     historyUnsubscribe = db.collection('moveOutRequests')
         .where('tenantEmail', '==', userData.email)
         .onSnapshot(snap => {
-
-            // Detect landlord decisions (only after initial load is done)
             if (watcherReady) {
                 snap.docChanges().forEach(change => {
                     if (change.type === 'modified' || change.type === 'added') {
@@ -632,7 +616,6 @@ function startRequestWatcher() {
                             const type = r.status === 'Approved' ? 'approved' : 'rejected';
                             showToast(`Your ${r.requestType} request was ${r.status.toLowerCase()}!`, type);
                             showStatusAlert(r.status, r.requestType, r.landlordNote);
-                            // Auto-switch to history tab
                             const histBtn = document.querySelector('[data-rtab="history"]');
                             if (histBtn && !histBtn.classList.contains('active')) histBtn.click();
                         }
@@ -640,8 +623,6 @@ function startRequestWatcher() {
                     }
                 });
             }
-
-            // Rebuild cache — sort by createdAt descending client-side
             cachedDocs = [];
             snap.forEach(doc => {
                 cachedDocs.push(doc.data());
@@ -650,19 +631,14 @@ function startRequestWatcher() {
             cachedDocs.sort((a, b) => {
                 const ta = a.createdAt ? (a.createdAt.toDate ? a.createdAt.toDate().getTime() : new Date(a.createdAt).getTime()) : 0;
                 const tb = b.createdAt ? (b.createdAt.toDate ? b.createdAt.toDate().getTime() : new Date(b.createdAt).getTime()) : 0;
-                return tb - ta; // newest first
+                return tb - ta;
             });
-
             watcherReady = true;
-
             hasPendingRequest = cachedDocs.some(d => d.status === 'Pending');
             syncPendingUI();
-
-            // Re-render if history tab is open
             if (document.getElementById('historyTab').classList.contains('active')) {
                 renderHistory();
             }
-
         }, err => {
             console.error('Watcher error:', err);
             document.getElementById('historyLoading').style.display = 'none';
@@ -722,12 +698,10 @@ document.querySelectorAll('.request-tab').forEach(tab => {
         tab.classList.add('active');
         document.querySelectorAll('.request-tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById(name + 'Tab').classList.add('active');
-
         if (name === 'history') {
             if (watcherReady) {
-                renderHistory(); // data already cached, render immediately
+                renderHistory();
             } else {
-                // Watcher still loading — keep spinner visible; it will call renderHistory() on arrival
                 document.getElementById('historyLoading').style.display = 'block';
                 document.getElementById('historyList').style.display    = 'none';
                 document.getElementById('historyEmpty').style.display   = 'none';
@@ -736,21 +710,15 @@ document.querySelectorAll('.request-tab').forEach(tab => {
     });
 });
 
-document.getElementById('logout-btn').addEventListener('click', () => {
-    if (confirm('Are you sure you want to logout?')) {
-        if (historyUnsubscribe) historyUnsubscribe();
-        localStorage.removeItem('userData');
-        window.location.href = 'index.html';
-    }
-});
-window.addEventListener('resize', syncHeaderToSidebar);
-
 document.addEventListener('DOMContentLoaded', () => {
     loadUserProfile();
     loadInbox();
-    startRequestWatcher(); // starts immediately — populates cache
+    startRequestWatcher();
     document.getElementById('preferredDate').min = new Date().toISOString().split('T')[0];
 });
 </script>
+
+<!-- sidebar.js must load last — it injects the <aside> into the DOM -->
+<script src="sidebar.js"></script>
 </body>
 </html>
