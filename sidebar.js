@@ -1,5 +1,13 @@
 (function () {
 
+  // Force load Font Awesome if not already loaded
+  if (!document.querySelector('link[href*="font-awesome"]')) {
+    const fa = document.createElement('link');
+    fa.rel = 'stylesheet';
+    fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+    document.head.insertBefore(fa, document.head.firstChild);
+  }
+
   const style = document.createElement('style');
   style.textContent = `
     html, body { margin: 0; padding: 0; }
@@ -101,6 +109,9 @@
     .nav-btn i {
       font-size: 17px;
       transition: color 0.18s;
+      font-family: "Font Awesome 6 Free" !important;
+      font-style: normal;
+      -webkit-font-smoothing: antialiased;
     }
 
     .nav-label {
@@ -192,6 +203,29 @@
     /* ── Content offset ── */
     .dashboard-content { margin-left: 64px !important; flex: 1; min-width: 0; }
     .dashboard-header { left: 64px !important; width: calc(100vw - 64px) !important; }
+
+    /* ── Mobile fixes ── */
+    @media (max-width: 768px) {
+      .dashboard-content {
+        margin-left: 64px !important;
+        width: calc(100vw - 64px) !important;
+        overflow-x: hidden !important;
+        padding: 12px !important;
+      }
+      .dashboard-header {
+        left: 64px !important;
+        width: calc(100vw - 64px) !important;
+        padding: 10px 12px !important;
+      }
+      /* Disable hover expand on mobile/touch screens */
+      .sidebar-dashboard:hover {
+        width: 64px !important;
+        box-shadow: 3px 0 12px rgba(0,0,0,0.15) !important;
+      }
+      .sidebar-dashboard:hover .nav-label { opacity: 0 !important; }
+      .sidebar-dashboard:hover .sidebar-logo-text { opacity: 0 !important; }
+      .sidebar-dashboard:hover .logout-btn .nav-label { opacity: 0 !important; }
+    }
   `;
   document.head.appendChild(style);
 
