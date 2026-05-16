@@ -204,11 +204,11 @@
     let userData = null;
     try { userData = JSON.parse(localStorage.getItem('userData')); } catch(e) {}
     const isTenant = userData && userData.role === 'tenant';
-    const dashboardPage = isTenant ? 'tenant-dashboard.html' : 'dashboard.html';
+    const dashboardPage = isTenant ? 'dashboard-tenant.html' : 'dashboard.html';
 
     const active = (name) => {
       if (name === 'dashboard.html') {
-        return (page === 'dashboard.html' || page === 'tenant-dashboard.html') ? 'active' : '';
+        return (page === 'dashboard.html' || page === 'dashboard-tenant.html') ? 'active' : '';
       }
       return page === name ? 'active' : '';
     };
