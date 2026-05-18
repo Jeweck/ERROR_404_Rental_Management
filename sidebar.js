@@ -1,12 +1,11 @@
 (function () {
 
-  // Force load Font Awesome if not already loaded
-  if (!document.querySelector('link[href*="font-awesome"]')) {
-    const fa = document.createElement('link');
-    fa.rel = 'stylesheet';
-    fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
-    document.head.insertBefore(fa, document.head.firstChild);
-  }
+  // Force load Font Awesome
+  const fa = document.createElement('link');
+  fa.rel = 'stylesheet';
+  fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+  fa.crossOrigin = 'anonymous';
+  document.head.insertBefore(fa, document.head.firstChild);
 
   const style = document.createElement('style');
   style.textContent = `
@@ -104,16 +103,8 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-    }
-
-    .nav-btn i {
-      font-size: 17px;
-      transition: color 0.18s;
-      font-family: "Font Awesome 6 Free" !important;
-      font-weight: 900 !important;
-      font-style: normal !important;
-      -webkit-font-smoothing: antialiased;
-      display: inline-block;
+      font-size: 18px;
+      color: rgba(255,255,255,0.65);
     }
 
     .nav-label {
@@ -131,12 +122,14 @@
       transform: translateX(2px);
     }
 
+    .nav-btn:hover .nav-icon-wrap { color: #ffffff; }
+
     .nav-btn.active {
       background: rgba(44,150,205,0.25);
       color: #ffffff;
     }
 
-    .nav-btn.active i { color: #5bbfed; }
+    .nav-btn.active .nav-icon-wrap { color: #5bbfed; }
 
     .nav-btn.active::before {
       content: '';
@@ -186,15 +179,8 @@
       width: 48px; min-width: 48px; height: 46px;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-    }
-
-    .logout-btn i {
-      font-size: 17px;
-      font-family: "Font Awesome 6 Free" !important;
-      font-weight: 900 !important;
-      font-style: normal !important;
-      -webkit-font-smoothing: antialiased;
-      display: inline-block;
+      font-size: 18px;
+      color: rgba(255,100,100,0.85);
     }
 
     .logout-btn .nav-label {
@@ -208,6 +194,8 @@
       color: #ff6b6b;
       transform: translateX(2px);
     }
+
+    .logout-btn:hover .logout-icon-wrap { color: #ff6b6b; }
 
     /* ── Content offset ── */
     .dashboard-content { margin-left: 64px !important; flex: 1; min-width: 0; }
@@ -266,34 +254,34 @@
       </div>
       <nav class="nav-menu">
         <button class="nav-btn ${active('dashboard.html')}" data-href="${dashboardPage}">
-          <span class="nav-icon-wrap"><i class="fas fa-chart-line"></i></span>
+          <span class="nav-icon-wrap">&#xf201;</span>
           <span class="nav-label">Dashboard</span>
           <span class="nav-tooltip">Dashboard</span>
         </button>
         <button class="nav-btn ${active('tenants.html')}" id="sidebar-tenants-btn" data-href="tenants.html">
-          <span class="nav-icon-wrap"><i class="fas fa-users"></i></span>
+          <span class="nav-icon-wrap">&#xf0c0;</span>
           <span class="nav-label">Tenants</span>
           <span class="nav-tooltip">Tenants</span>
         </button>
         <button class="nav-btn ${active('room-details.html')}" id="sidebar-room-btn" data-href="room-details.html">
-          <span class="nav-icon-wrap"><i class="fas fa-home"></i></span>
+          <span class="nav-icon-wrap">&#xf015;</span>
           <span class="nav-label">Room Details</span>
           <span class="nav-tooltip">Room Details</span>
         </button>
         <button class="nav-btn ${active('payment.html')}" data-href="payment.html">
-          <span class="nav-icon-wrap"><i class="fas fa-credit-card"></i></span>
+          <span class="nav-icon-wrap">&#xf09d;</span>
           <span class="nav-label">Payment</span>
           <span class="nav-tooltip">Payment</span>
         </button>
         <button class="nav-btn ${active('settings.html')}" data-href="settings.html">
-          <span class="nav-icon-wrap"><i class="fas fa-cog"></i></span>
+          <span class="nav-icon-wrap">&#xf013;</span>
           <span class="nav-label">Settings</span>
           <span class="nav-tooltip">Settings</span>
         </button>
       </nav>
       <div class="sidebar-bottom">
         <button class="logout-btn" id="sidebar-logout-btn">
-          <span class="logout-icon-wrap"><i class="fas fa-sign-out-alt"></i></span>
+          <span class="logout-icon-wrap">&#xf2f5;</span>
           <span class="nav-label">Logout</span>
         </button>
       </div>
