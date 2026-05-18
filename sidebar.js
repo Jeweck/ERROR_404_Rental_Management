@@ -110,8 +110,10 @@
       font-size: 17px;
       transition: color 0.18s;
       font-family: "Font Awesome 6 Free" !important;
-      font-style: normal;
+      font-weight: 900 !important;
+      font-style: normal !important;
       -webkit-font-smoothing: antialiased;
+      display: inline-block;
     }
 
     .nav-label {
@@ -186,7 +188,14 @@
       flex-shrink: 0;
     }
 
-    .logout-btn i { font-size: 17px; }
+    .logout-btn i {
+      font-size: 17px;
+      font-family: "Font Awesome 6 Free" !important;
+      font-weight: 900 !important;
+      font-style: normal !important;
+      -webkit-font-smoothing: antialiased;
+      display: inline-block;
+    }
 
     .logout-btn .nav-label {
       opacity: 0; transition: opacity 0.18s 0.06s;
@@ -217,7 +226,6 @@
         width: calc(100vw - 64px) !important;
         padding: 10px 12px !important;
       }
-      /* Disable hover expand on mobile/touch screens */
       .sidebar-dashboard:hover {
         width: 64px !important;
         box-shadow: 3px 0 12px rgba(0,0,0,0.15) !important;
