@@ -17,240 +17,90 @@
             gap: 16px; width: 100vw; box-sizing: border-box;
             position: fixed; top: 0; left: 0; right: 0; z-index: 40;
         }
-
         .sidebar-dashboard { z-index: 50; }
-
-        .main-dashboard {
-            margin-top: 60px;
-            min-height: calc(100vh - 60px);
-            background: #f0f2f5;
-        }
-
-        .notification-btn {
-            background: none; border: none; cursor: pointer;
-            font-size: 18px; color: #333; padding: 4px; display: flex; align-items: center;
-        }
-
+        .main-dashboard { margin-top: 60px; min-height: calc(100vh - 60px); background: #f0f2f5; }
         .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
         .user-profile-info { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
         .user-profile-name { font-size: 13px; font-weight: 600; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
         .user-profile-email { font-size: 11px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
 
-        /* ── Page wrapper ── */
-        .payment-page-body {
-            padding: 28px 28px 100px;
-            width: 100%;
-        }
-
-        /* ── Page header ── */
-        .payment-page-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 22px;
-        }
-
-        .payment-page-title-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .payment-page-title {
-            font-size: 22px; font-weight: 700; color: #1a1a1a;
-            display: flex; align-items: center; gap: 10px;
-        }
-
+        .payment-page-body { padding: 28px 28px 100px; width: 100%; }
+        .payment-page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+        .payment-page-title-group { display: flex; align-items: center; gap: 12px; }
+        .payment-page-title { font-size: 22px; font-weight: 700; color: #1a1a1a; }
         .receipts-count-badge { font-size: 13px; font-weight: 400; color: #888; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
 
-        /* ── Header action buttons ── */
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .hdr-btn {
-            display: flex; align-items: center; gap: 6px;
-            padding: 8px 16px; border-radius: 8px; font-size: 13px;
-            font-weight: 600; cursor: pointer; border: none; transition: all .2s;
-            font-family: inherit;
-        }
-        .hdr-btn-outline {
-            background: #fff; color: #2C96CD; border: 1.5px solid #2C96CD;
-        }
+        .hdr-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; font-family: inherit; }
+        .hdr-btn-outline { background: #fff; color: #2C96CD; border: 1.5px solid #2C96CD; }
         .hdr-btn-outline:hover { background: #f0f7ff; }
+        .submitted-badge { background: #ef4444; color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: inline-flex; align-items: center; justify-content: center; margin-left: 2px; }
 
-        .submitted-badge {
-            background: #ef4444; color: #fff; border-radius: 50%;
-            width: 18px; height: 18px; font-size: 10px;
-            display: inline-flex; align-items: center; justify-content: center;
-            margin-left: 2px;
-        }
-
-        /* ── Empty state ── */
-        .empty-state-wrap {
-            display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            padding: 80px 20px; color: #ccc; text-align: center;
-        }
+        .empty-state-wrap { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; color: #ccc; text-align: center; }
         .empty-state-wrap i { font-size: 52px; margin-bottom: 14px; }
         .empty-state-wrap p { font-size: 15px; color: #bbb; margin: 0; }
 
-        /* ── Loading ── */
-        .loading-wrap {
-            display: flex; align-items: center; justify-content: center;
-            padding: 60px 20px; color: #aaa; font-size: 14px; gap: 10px;
-        }
+        .loading-wrap { display: flex; align-items: center; justify-content: center; padding: 60px 20px; color: #aaa; font-size: 14px; gap: 10px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .fa-spin { animation: spin 0.8s linear infinite; }
 
-        /* ── Receipts list ── */
-        .receipts-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 100%;
-        }
+        .receipts-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
-        /* ── Receipt card ── */
-        .receipt-card {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 18px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            animation: fadeIn 0.25s ease;
-            transition: box-shadow 0.2s;
-        }
+        .receipt-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; width: 100%; animation: fadeIn 0.25s ease; transition: box-shadow 0.2s; }
         .receipt-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
-
         @keyframes fadeIn  { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(8px); } }
 
         .receipt-left { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0; }
-
-        .receipt-icon {
-            width: 44px; height: 44px; border-radius: 10px;
-            background: #e8f5fd; color: #2C96CD;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; flex-shrink: 0;
-        }
-
+        .receipt-icon { width: 44px; height: 44px; border-radius: 10px; background: #e8f5fd; color: #2C96CD; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
         .receipt-info { flex: 1; min-width: 0; }
         .receipt-desc { font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .receipt-meta { font-size: 12px; color: #888; }
-
         .receipt-right { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
-
         .receipt-amount { font-size: 17px; font-weight: 700; color: #1a1a1a; }
-
-        .receipt-badge {
-            font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600;
-        }
+        .receipt-badge { font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
         .badge-paid    { background: #dcfce7; color: #16a34a; }
         .badge-pending { background: #fef3c7; color: #d97706; }
 
-        /* ── Action menu ── */
         .action-menu { position: relative; }
-        .menu-btn {
-            background: none; border: 1px solid #e8e8e8; cursor: pointer; color: #888;
-            font-size: 13px; padding: 6px 10px; border-radius: 7px; transition: all 0.15s;
-        }
+        .menu-btn { background: none; border: 1px solid #e8e8e8; cursor: pointer; color: #888; font-size: 13px; padding: 6px 10px; border-radius: 7px; transition: all 0.15s; }
         .menu-btn:hover { background: #f0f8fd; color: #2C96CD; border-color: #2C96CD; }
-
-        .dropdown-menu {
-            display: none; position: absolute; right: 0; top: calc(100% + 4px);
-            background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 10;
-            min-width: 120px; overflow: hidden;
-        }
+        .dropdown-menu { display: none; position: absolute; right: 0; top: calc(100% + 4px); background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 10; min-width: 120px; overflow: hidden; }
         .dropdown-menu.show { display: block; }
-
-        .menu-item {
-            width: 100%; padding: 9px 14px; background: none; border: none;
-            cursor: pointer; font-size: 13px; display: flex; align-items: center;
-            gap: 8px; color: #333; transition: background 0.15s;
-        }
+        .menu-item { width: 100%; padding: 9px 14px; background: none; border: none; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; color: #333; transition: background 0.15s; }
         .menu-item:hover { background: #f9fafb; }
         .delete-btn { color: #ef4444; }
         .delete-btn:hover { background: #fef2f2; }
-
         .hidden-for-tenant { display: none !important; }
 
-        /* ── Floating btn ── */
-        .floating-btn-container {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            z-index: 50;
-        }
-
-        .floating-btn {
-            background: #2C96CD; color: #fff; border: none; border-radius: 8px;
-            padding: 10px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-            display: flex; align-items: center; gap: 7px;
-            box-shadow: 0 2px 8px rgba(44,150,205,0.25);
-            transition: background 0.15s;
-        }
+        .floating-btn-container { position: fixed; bottom: 32px; right: 32px; z-index: 50; }
+        .floating-btn { background: #2C96CD; color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 7px; box-shadow: 0 2px 8px rgba(44,150,205,0.25); transition: background 0.15s; }
         .floating-btn:hover { background: #1e7aab; }
-        .floating-btn:active { background: #1a6a96; }
 
-        /* ── Overlays ── */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35);
-            align-items: center; justify-content: center; z-index: 200;
-        }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); align-items: center; justify-content: center; z-index: 200; }
         .modal-overlay.open { display: flex; }
 
-        /* ── Add/Edit Modal ── */
-        .modal {
-            background: #fff; border-radius: 16px; padding: 28px; width: 400px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto;
-        }
+        .modal { background: #fff; border-radius: 16px; padding: 28px; width: 400px; box-shadow: 0 8px 40px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto; }
         .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; }
         .modal label { font-size: 12px; color: #777; display: block; margin-bottom: 5px; margin-top: 14px; font-weight: 600; }
-        .modal input, .modal select {
-            width: 100%; padding: 9px 12px; border: 1.5px solid #e5e7eb;
-            border-radius: 8px; font-size: 14px; color: #222; outline: none;
-            transition: border 0.2s; font-family: inherit;
-        }
+        .modal input, .modal select { width: 100%; padding: 9px 12px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 14px; color: #222; outline: none; transition: border 0.2s; font-family: inherit; }
         .modal input:focus, .modal select:focus { border-color: #2C96CD; }
         .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
-        .modal-actions button {
-            flex: 1; padding: 10px; border-radius: 8px; font-size: 14px;
-            font-weight: 600; cursor: pointer; border: none; transition: background 0.2s; font-family: inherit;
-        }
+        .modal-actions button { flex: 1; padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: background 0.2s; font-family: inherit; }
         .btn-cancel { background: #f3f4f6; color: #555; }
         .btn-cancel:hover { background: #e5e7eb; }
         .btn-save { background: #2C96CD; color: #fff; }
         .btn-save:hover { background: #1e7aa8; }
         .btn-save:disabled { background: #a0c8e0; cursor: not-allowed; }
 
-        /* ── Upload Receipt Modal (Tenant) ── */
-        .upload-modal {
-            background: #fff; border-radius: 16px; padding: 28px; width: 440px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto;
-        }
+        .upload-modal { background: #fff; border-radius: 16px; padding: 28px; width: 440px; box-shadow: 0 8px 40px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto; }
         .upload-modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; }
         .upload-modal label { font-size: 12px; color: #777; display: block; margin-bottom: 5px; margin-top: 14px; font-weight: 600; }
-        .upload-modal input[type="text"], .upload-modal textarea {
-            width: 100%; padding: 9px 12px; border: 1.5px solid #e5e7eb;
-            border-radius: 8px; font-size: 14px; color: #222; outline: none;
-            transition: border 0.2s; font-family: inherit;
-        }
+        .upload-modal input[type="text"], .upload-modal textarea { width: 100%; padding: 9px 12px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 14px; color: #222; outline: none; transition: border 0.2s; font-family: inherit; }
         .upload-modal input[type="text"]:focus, .upload-modal textarea:focus { border-color: #2C96CD; }
         .upload-modal textarea { resize: vertical; min-height: 70px; }
 
-        .drop-zone {
-            border: 2px dashed #c8d8e8; border-radius: 12px; padding: 36px 20px;
-            text-align: center; cursor: pointer; transition: all .2s; background: #fafcff;
-            position: relative;
-        }
+        .drop-zone { border: 2px dashed #c8d8e8; border-radius: 12px; padding: 36px 20px; text-align: center; cursor: pointer; transition: all .2s; background: #fafcff; position: relative; }
         .drop-zone:hover, .drop-zone.dragover { border-color: #2C96CD; background: #f0f7ff; }
         .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         .drop-zone i { font-size: 36px; color: #c8d8e8; margin-bottom: 10px; display: block; transition: color .2s; }
@@ -260,104 +110,54 @@
 
         .preview-wrap { margin-top: 14px; display: none; border-radius: 10px; overflow: hidden; position: relative; }
         .preview-wrap img { width: 100%; max-height: 220px; object-fit: cover; display: block; }
-        .preview-remove {
-            position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.5);
-            color: #fff; border: none; border-radius: 50%; width: 28px; height: 28px;
-            cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;
-        }
+        .preview-remove { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.5); color: #fff; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
 
-        /* ── View Submitted Modal (Landlord) ── */
-        .view-submitted-modal {
-            background: #fff; border-radius: 16px; padding: 28px; width: 560px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.15); max-height: 85vh; overflow-y: auto; position: relative;
-        }
+        .upload-progress { margin-top: 14px; display: none; }
+        .progress-bar-wrap { background: #e5e7eb; border-radius: 99px; height: 8px; overflow: hidden; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, #2C96CD, #1e7aab); border-radius: 99px; transition: width 0.3s; width: 0%; }
+        .progress-label { font-size: 12px; color: #888; margin-top: 6px; text-align: center; }
+
+        .view-submitted-modal { background: #fff; border-radius: 16px; padding: 28px; width: 560px; box-shadow: 0 8px 40px rgba(0,0,0,0.15); max-height: 85vh; overflow-y: auto; position: relative; }
         .view-submitted-modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #1a1a1a; }
-        .modal-close-x {
-            position: absolute; top: 16px; right: 18px; background: none;
-            border: none; font-size: 22px; cursor: pointer; color: #999; line-height: 1;
-        }
+        .modal-close-x { position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 22px; cursor: pointer; color: #999; line-height: 1; }
         .modal-close-x:hover { color: #333; }
 
         .submitted-list { display: flex; flex-direction: column; gap: 14px; }
         .submitted-card { border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
-        .submitted-img {
-            width: 100%; max-height: 200px; object-fit: cover; display: block;
-            cursor: zoom-in; transition: opacity .2s;
-        }
+        .submitted-img { width: 100%; max-height: 200px; object-fit: cover; display: block; cursor: zoom-in; transition: opacity .2s; }
         .submitted-img:hover { opacity: .9; }
         .submitted-info { padding: 12px 16px; background: #fafafa; }
         .submitted-tenant { font-size: 13px; font-weight: 700; color: #1a1a1a; }
         .submitted-note { font-size: 12px; color: #666; margin-top: 3px; }
         .submitted-date { font-size: 11px; color: #aaa; margin-top: 4px; }
-        .submitted-dismiss {
-            font-size: 11px; color: #ef4444; background: none; border: none;
-            cursor: pointer; padding: 0; margin-top: 6px;
-        }
+        .submitted-dismiss { font-size: 11px; color: #ef4444; background: none; border: none; cursor: pointer; padding: 0; margin-top: 6px; }
         .submitted-dismiss:hover { text-decoration: underline; }
-
         .no-submissions { text-align: center; padding: 50px 20px; color: #bbb; }
         .no-submissions i { font-size: 40px; margin-bottom: 12px; display: block; }
 
-        /* ── Lightbox ── */
-        .lightbox {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85);
-            align-items: center; justify-content: center; z-index: 400; cursor: zoom-out;
-        }
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85); align-items: center; justify-content: center; z-index: 400; cursor: zoom-out; }
         .lightbox.open { display: flex; }
         .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,.5); }
 
-        /* ── Landlord Payment Modal ── */
-        .landlord-modal {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35);
-            align-items: center; justify-content: center; z-index: 200;
-        }
+        .landlord-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); align-items: center; justify-content: center; z-index: 200; }
         .landlord-modal.open { display: flex; }
-
-        .landlord-card {
-            background: #fff; border-radius: 16px; padding: 32px; width: 100%;
-            max-width: 400px; box-shadow: 0 8px 40px rgba(0,0,0,0.15); position: relative;
-        }
+        .landlord-card { background: #fff; border-radius: 16px; padding: 32px; width: 100%; max-width: 400px; box-shadow: 0 8px 40px rgba(0,0,0,0.15); position: relative; }
         .landlord-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: #1e1b4b; text-align: center; }
-
-        .payment-method-btn {
-            width: 100%; padding: 14px; margin-bottom: 12px; border: 2px solid #e5e7eb;
-            background: #fff; border-radius: 8px; cursor: pointer; font-size: 14px;
-            font-weight: 600; color: #333; display: flex; align-items: center; gap: 10px; transition: all 0.2s;
-        }
+        .payment-method-btn { width: 100%; padding: 14px; margin-bottom: 12px; border: 2px solid #e5e7eb; background: #fff; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; color: #333; display: flex; align-items: center; gap: 10px; transition: all 0.2s; }
         .payment-method-btn:hover { border-color: #2C96CD; background: #f0f7ff; }
         .payment-method-btn.active { border-color: #2C96CD; background: #2C96CD; color: #fff; }
-
-        .landlord-details {
-            background: #f9fafb; padding: 16px; border-radius: 8px; margin-top: 16px; display: none;
-        }
+        .landlord-details { background: #f9fafb; padding: 16px; border-radius: 8px; margin-top: 16px; display: none; }
         .landlord-details.show { display: block; }
-
-        .detail-row {
-            display: flex; justify-content: space-between; padding: 8px 0;
-            border-bottom: 1px solid #e5e7eb; font-size: 13px;
-        }
+        .detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
         .detail-row:last-child { border-bottom: none; }
         .detail-label { color: #888; font-weight: 600; }
         .detail-value { color: #333; font-weight: 600; }
-
-        .copy-btn {
-            background: #2C96CD; color: #fff; border: none; border-radius: 6px;
-            padding: 8px 12px; font-size: 12px; cursor: pointer; margin-top: 12px; width: 100%;
-        }
+        .copy-btn { background: #2C96CD; color: #fff; border: none; border-radius: 6px; padding: 8px 12px; font-size: 12px; cursor: pointer; margin-top: 12px; width: 100%; }
         .copy-btn:hover { background: #1e7aab; }
-
-        .close-landlord-btn {
-            position: absolute; top: 12px; right: 12px; background: none;
-            border: none; font-size: 24px; cursor: pointer; color: #999;
-        }
+        .close-landlord-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
         .close-landlord-btn:hover { color: #333; }
 
-        /* ── Toast ── */
-        .toast {
-            position: fixed; bottom: 90px; right: 32px; background: #333; color: #fff;
-            padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 300;
-            opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none;
-        }
+        .toast { position: fixed; bottom: 90px; right: 32px; background: #333; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 300; opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none; }
         .toast.show { opacity: 1; transform: translateY(0); }
         .toast.success { background: #16a34a; }
         .toast.error   { background: #ef4444; }
@@ -366,10 +166,9 @@
 <body>
 <div class="dashboard-container">
 
-    <!-- Header -->
     <header class="dashboard-header">
         <div class="user-profile">
-            <div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:#2C96CD;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:0.03em;"></div>
+            <div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:#2C96CD;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;"></div>
             <div class="user-profile-info">
                 <div class="user-profile-name" id="userProfileName">User Name</div>
                 <div class="user-profile-email" id="userProfileEmail">user@email.com</div>
@@ -377,11 +176,8 @@
         </div>
     </header>
 
-    <!-- Main content -->
     <div class="main-dashboard">
         <div class="payment-page-body">
-
-            <!-- Page header -->
             <div class="payment-page-header">
                 <div class="payment-page-title-group">
                     <div class="payment-page-title">Receipts</div>
@@ -389,25 +185,15 @@
                 </div>
                 <div class="header-actions" id="headerActions"></div>
             </div>
-
-            <!-- Loading -->
-            <div class="loading-wrap" id="loading-wrap">
-                <i class="fas fa-spinner fa-spin"></i> Loading receipts…
-            </div>
-
-            <!-- Empty state -->
+            <div class="loading-wrap" id="loading-wrap"><i class="fas fa-spinner fa-spin"></i> Loading receipts…</div>
             <div class="empty-state-wrap" id="empty-wrap">
                 <i class="fas fa-receipt"></i>
                 <p>No receipts yet. Click <strong>+ Add Receipt</strong> to get started.</p>
             </div>
-
-            <!-- Receipts list -->
             <div class="receipts-list" id="receipts-list"></div>
-
         </div>
     </div>
 
-    <!-- Floating button -->
     <div class="floating-btn-container" id="floatingContainer">
         <button class="floating-btn" id="add-receipt-btn">
             <i class="fas fa-plus"></i> Add Receipt
@@ -415,7 +201,7 @@
     </div>
 </div>
 
-<!-- ── Add / Edit Receipt Modal ── -->
+<!-- Add/Edit Receipt Modal -->
 <div class="modal-overlay" id="modal">
     <div class="modal">
         <h3 id="modal-title">Add Receipt</h3>
@@ -437,7 +223,7 @@
     </div>
 </div>
 
-<!-- ── Upload Receipt Modal (Tenant only) ── -->
+<!-- Upload Receipt Modal (Tenant only) -->
 <div class="modal-overlay" id="uploadOverlay">
     <div class="upload-modal">
         <h3><i class="fas fa-cloud-upload-alt" style="color:#2C96CD;margin-right:8px"></i>Upload Receipt</h3>
@@ -449,7 +235,11 @@
         </div>
         <div class="preview-wrap" id="previewWrap">
             <img id="previewImg" src="" alt="Preview">
-            <button class="preview-remove" id="removeImg" title="Remove image"><i class="fas fa-times"></i></button>
+            <button class="preview-remove" id="removeImg" title="Remove"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="upload-progress" id="uploadProgress">
+            <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+            <div class="progress-label" id="progressLabel">Uploading to cloud…</div>
         </div>
         <label>Your Name</label>
         <input type="text" id="uploaderName" placeholder="e.g. Juan Dela Cruz">
@@ -462,7 +252,7 @@
     </div>
 </div>
 
-<!-- ── View Submitted Receipts Modal (Landlord only) ── -->
+<!-- View Submitted Modal (Landlord only) -->
 <div class="modal-overlay" id="viewOverlay">
     <div class="view-submitted-modal">
         <button class="modal-close-x" id="closeViewModal">&times;</button>
@@ -471,186 +261,199 @@
     </div>
 </div>
 
-<!-- ── Image Lightbox ── -->
+<!-- Lightbox -->
 <div class="lightbox" id="lightbox">
     <img id="lightboxImg" src="" alt="Full receipt">
 </div>
 
-<!-- ── Landlord Payment Details Modal (Tenant only) ── -->
+<!-- Landlord Payment Details Modal (Tenant only) -->
 <div class="landlord-modal" id="landlordModal">
     <div class="landlord-card">
         <button class="close-landlord-btn" id="closeLandlordModal">&times;</button>
         <h3>Payment Methods</h3>
-        <button class="payment-method-btn active" onclick="selectPaymentMethod(event, 'gcash')">
+        <button class="payment-method-btn active" onclick="selectPaymentMethod(event,'gcash')">
             <i class="fas fa-mobile-alt"></i> GCash
         </button>
-        <button class="payment-method-btn" onclick="selectPaymentMethod(event, 'banktransfer')">
+        <button class="payment-method-btn" onclick="selectPaymentMethod(event,'banktransfer')">
             <i class="fas fa-university"></i> Bank Transfer
         </button>
         <div class="landlord-details show" id="gcashDetails">
-            <div class="detail-row">
-                <span class="detail-label">Landlord Name:</span>
-                <span class="detail-value" id="gcashName">Maria Santos</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">GCash Number:</span>
-                <span class="detail-value" id="gcashNumber">09171234567</span>
-            </div>
+            <div class="detail-row"><span class="detail-label">Landlord Name:</span><span class="detail-value" id="gcashName">Maria Santos</span></div>
+            <div class="detail-row"><span class="detail-label">GCash Number:</span><span class="detail-value" id="gcashNumber">09171234567</span></div>
             <button class="copy-btn" onclick="copyToClipboard('gcashNumber')">Copy Number</button>
         </div>
         <div class="landlord-details" id="bankDetails">
-            <div class="detail-row">
-                <span class="detail-label">Landlord Name:</span>
-                <span class="detail-value" id="bankName">Maria Santos</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Bank Name:</span>
-                <span class="detail-value" id="bankBankName">BPI</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Account Number:</span>
-                <span class="detail-value" id="bankAccount">1234567890</span>
-            </div>
+            <div class="detail-row"><span class="detail-label">Landlord Name:</span><span class="detail-value" id="bankName">Maria Santos</span></div>
+            <div class="detail-row"><span class="detail-label">Bank Name:</span><span class="detail-value" id="bankBankName">BPI</span></div>
+            <div class="detail-row"><span class="detail-label">Account Number:</span><span class="detail-value" id="bankAccount">1234567890</span></div>
             <button class="copy-btn" onclick="copyToClipboard('bankAccount')">Copy Account Number</button>
         </div>
     </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- Firebase compat SDK -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-// ── Firebase Init ─────────────────────────────────────────────────────────
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  STEP 1: Replace with your Cloudinary credentials           ║
+// ║  Sign up free at cloudinary.com                             ║
+// ╚══════════════════════════════════════════════════════════════╝
+const CLOUDINARY_CLOUD_NAME    = 'dvxwsj8j2';    // e.g. 'dxyz123abc'
+const CLOUDINARY_UPLOAD_PRESET = 'Rentflow_Reciepts';   // e.g. 'rental_receipts'
+
+// ── Firebase ───────────────────────────────────────────────────
 const firebaseConfig = {
     apiKey:            "AIzaSyAGd7Aaiu_d-VIokG16gapCZOlpGheb9tY",
     authDomain:        "rentalmangemnetsystem.firebaseapp.com",
     projectId:         "rentalmangemnetsystem",
     storageBucket:     "rentalmangemnetsystem.firebasestorage.app",
     messagingSenderId: "143952534193",
-    appId:             "1:143952534193:web:1a0dc97e5e0f10fde16090",
-    measurementId:     "G-8HXJE3259V"
+    appId:             "1:143952534193:web:1a0dc97e5e0f10fde16090"
 };
-
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-const db          = firebase.firestore();
-const receiptsCol = db.collection('receipts');
+const db             = firebase.firestore();
+const receiptsCol    = db.collection('receipts');
+const submissionsCol = db.collection('submittedReceipts');
 
-// ── State ─────────────────────────────────────────────────────────────────
-let userRole    = 'landlord';
-let editingId   = null;
-let uploadedImageData = null;
+// ── State ──────────────────────────────────────────────────────
+let userRole     = 'landlord';
+let editingId    = null;
+let uploadedFile = null; // actual File object, NOT base64
 
-// ── DOM refs ──────────────────────────────────────────────────────────────
-const addBtn        = document.getElementById('add-receipt-btn');
+// ── DOM refs ───────────────────────────────────────────────────
 const modal         = document.getElementById('modal');
+const addBtn        = document.getElementById('add-receipt-btn');
 const cancelBtn     = document.getElementById('cancel-btn');
 const saveBtn       = document.getElementById('save-btn');
 const list          = document.getElementById('receipts-list');
 const emptyWrap     = document.getElementById('empty-wrap');
 const loadingWrap   = document.getElementById('loading-wrap');
-const landlordModal = document.getElementById('landlordModal');
 const uploadOverlay = document.getElementById('uploadOverlay');
 const viewOverlay   = document.getElementById('viewOverlay');
 const lightbox      = document.getElementById('lightbox');
+const landlordModal = document.getElementById('landlordModal');
+const dropZone      = document.getElementById('dropZone');
+const fileInput     = document.getElementById('fileInput');
+const previewWrap   = document.getElementById('previewWrap');
+const previewImg    = document.getElementById('previewImg');
 
-// ── Toast ─────────────────────────────────────────────────────────────────
+// ── Toast ──────────────────────────────────────────────────────
 function showToast(msg, type = '') {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.className = 'toast show ' + type;
-    setTimeout(() => t.className = 'toast', 3000);
+    setTimeout(() => t.className = 'toast', 3500);
 }
 
-// ── Count badge ───────────────────────────────────────────────────────────
+// ── Count badge ────────────────────────────────────────────────
 function updateCountBadge() {
     const count = list.children.length;
     const badge = document.getElementById('receiptsCountBadge');
     if (badge) badge.textContent = count + ' receipt' + (count !== 1 ? 's' : '');
 }
 
-// ── Submissions (localStorage) ────────────────────────────────────────────
-function getSubmissions() {
-    try { return JSON.parse(localStorage.getItem('submittedReceipts') || '[]'); } catch(e) { return []; }
-}
-function saveSubmissions(arr) {
-    localStorage.setItem('submittedReceipts', JSON.stringify(arr));
+// ════════════════════════════════════════════════════════════════
+// CLOUDINARY UPLOAD
+// Image goes to Cloudinary (web) → returns a public https:// URL
+// That URL is saved in Firestore — tiny, no size limit issues
+// Landlord fetches the URL from Firestore → image loads from web
+// ════════════════════════════════════════════════════════════════
+function uploadToCloudinary(file, onProgress) {
+    return new Promise((resolve, reject) => {
+        const url      = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        formData.append('folder', 'rental_receipts');
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url);
+
+        xhr.upload.onprogress = e => {
+            if (e.lengthComputable && onProgress)
+                onProgress(Math.round((e.loaded / e.total) * 100));
+        };
+
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                resolve(data.secure_url); // public https:// URL
+            } else {
+                reject(new Error('Cloudinary error ' + xhr.status + ': ' + xhr.responseText));
+            }
+        };
+
+        xhr.onerror = () => reject(new Error('Network error. Check your internet connection.'));
+        xhr.send(formData);
+    });
 }
 
-// ── Header actions (role-based) ───────────────────────────────────────────
-function renderHeaderActions() {
+// ── Header actions (role-based) ────────────────────────────────
+async function renderHeaderActions() {
     const area = document.getElementById('headerActions');
     if (userRole === 'tenant') {
         area.innerHTML = `
             <button class="hdr-btn hdr-btn-outline" id="uploadReceiptBtn">
                 <i class="fas fa-upload"></i> Upload Receipt
             </button>`;
-        document.getElementById('uploadReceiptBtn').addEventListener('click', () => {
-            uploadOverlay.classList.add('open');
-        });
+        document.getElementById('uploadReceiptBtn').addEventListener('click', () => uploadOverlay.classList.add('open'));
     } else {
-        const count = getSubmissions().length;
-        const badgeHtml = count ? `<span class="submitted-badge">${count}</span>` : '';
+        let count = 0;
+        try { const snap = await submissionsCol.get(); count = snap.size; } catch(e) {}
+        const badge = count ? `<span class="submitted-badge">${count}</span>` : '';
         area.innerHTML = `
             <button class="hdr-btn hdr-btn-outline" id="viewSubmittedBtn">
-                <i class="fas fa-images"></i> View Submitted${badgeHtml}
+                <i class="fas fa-images"></i> View Submitted${badge}
             </button>`;
         document.getElementById('viewSubmittedBtn').addEventListener('click', openViewModal);
     }
 }
 
-// ── Load user profile ─────────────────────────────────────────────────────
+// ── Load user profile ──────────────────────────────────────────
 function loadUserProfile() {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(sessionStorage.getItem('userData') || localStorage.getItem('userData') || 'null');
     if (!userData) { window.location.replace('index.html'); return; }
 
     userRole = userData.role || 'landlord';
-    document.getElementById('userProfileName').textContent  = userData.username || userData.name || 'User Name';
-    document.getElementById('userProfileEmail').textContent = userData.email || 'user@email.com';
+    document.getElementById('userProfileName').textContent  = userData.username || userData.name || 'User';
+    document.getElementById('userProfileEmail').textContent = userData.email || '';
 
-    const nameParts = (userData.name || '').trim().split(' ').filter(Boolean);
+    const parts = (userData.name || '').trim().split(' ').filter(Boolean);
     let initials = '';
-    if (nameParts.length >= 2) {
-        initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+    if (parts.length >= 2) {
+        initials = (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
     } else if (userData.email) {
-        const emailUser = userData.email.split('@')[0].replace(/[0-9]/g, '');
-        const emailParts = emailUser.match(/[a-z]+/gi) || [];
-        initials = emailParts.length >= 2
-            ? (emailParts[0][0] + emailParts[1][0]).toUpperCase()
-            : emailUser.slice(0, 2).toUpperCase();
+        const eu = userData.email.split('@')[0].replace(/[0-9]/g,'');
+        const ep = eu.match(/[a-z]+/gi) || [];
+        initials = ep.length >= 2 ? (ep[0][0]+ep[1][0]).toUpperCase() : eu.slice(0,2).toUpperCase();
     } else {
-        initials = (userData.name || 'U').slice(0, 2).toUpperCase();
+        initials = (userData.name||'U').slice(0,2).toUpperCase();
     }
     document.getElementById('userAvatar').textContent = initials;
 
     if (userRole === 'tenant') {
-        // Swap floating button to Pay Now
-        const floatingContainer = document.getElementById('floatingContainer');
-        if (floatingContainer) {
-            floatingContainer.innerHTML = `
-                <button class="floating-btn" id="view-landlord-btn">
-                    <i class="fas fa-building"></i> Pay Now
-                </button>`;
-            document.getElementById('view-landlord-btn')
-                .addEventListener('click', () => landlordModal.classList.add('open'));
+        const fc = document.getElementById('floatingContainer');
+        if (fc) {
+            fc.innerHTML = `<button class="floating-btn" id="view-landlord-btn"><i class="fas fa-building"></i> Pay Now</button>`;
+            document.getElementById('view-landlord-btn').addEventListener('click', () => landlordModal.classList.add('open'));
         }
     }
 
     renderHeaderActions();
 }
 
-// ── Render a single receipt card ──────────────────────────────────────────
+// ── Render receipt card ────────────────────────────────────────
 function renderReceipt(docId, data, prepend = true) {
     if (document.querySelector(`[data-receipt-id="${docId}"]`)) return;
-
-    const card     = document.createElement('div');
+    const card = document.createElement('div');
     card.className = 'receipt-card';
     card.setAttribute('data-receipt-id', docId);
 
-    const amount     = parseFloat(data.amount || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 });
+    const amount     = parseFloat(data.amount||0).toLocaleString('en-PH',{minimumFractionDigits:2});
     const badgeClass = data.status === 'paid' ? 'badge-paid' : 'badge-pending';
     const badgeLabel = data.status === 'paid' ? 'Paid' : 'Pending';
     const isLandlord = userRole !== 'tenant';
@@ -659,164 +462,124 @@ function renderReceipt(docId, data, prepend = true) {
         <div class="receipt-left">
             <div class="receipt-icon"><i class="fas fa-receipt"></i></div>
             <div class="receipt-info">
-                <div class="receipt-desc">${data.description || 'Receipt'}</div>
-                <div class="receipt-meta">${data.name || '—'} · ${data.date || '—'}</div>
+                <div class="receipt-desc">${data.description||'Receipt'}</div>
+                <div class="receipt-meta">${data.name||'—'} · ${data.date||'—'}</div>
             </div>
         </div>
         <div class="receipt-right">
             <span class="receipt-badge ${badgeClass}">${badgeLabel}</span>
             <div class="receipt-amount">₱${amount}</div>
-            <div class="action-menu ${isLandlord ? '' : 'hidden-for-tenant'}">
-                <button class="menu-btn" onclick="togglePaymentMenu(event)">
-                    <i class="fas fa-ellipsis-v"></i>
-                </button>
+            <div class="action-menu ${isLandlord?'':'hidden-for-tenant'}">
+                <button class="menu-btn" onclick="togglePaymentMenu(event)"><i class="fas fa-ellipsis-v"></i></button>
                 <div class="dropdown-menu">
-                    <button class="menu-item" onclick="openEditModal(event)">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <button class="menu-item delete-btn" onclick="deleteReceipt(event)">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
+                    <button class="menu-item" onclick="openEditModal(event)"><i class="fas fa-edit"></i> Edit</button>
+                    <button class="menu-item delete-btn" onclick="deleteReceipt(event)"><i class="fas fa-trash"></i> Delete</button>
                 </div>
             </div>
         </div>`;
-
     if (prepend) list.prepend(card); else list.appendChild(card);
     updateCountBadge();
 }
 
-// ── Load all receipts ─────────────────────────────────────────────────────
+// ── Load receipts ──────────────────────────────────────────────
 async function loadReceipts() {
     loadingWrap.style.display = 'flex';
     emptyWrap.style.display   = 'none';
     list.innerHTML            = '';
-
     try {
-        const snapshot = await receiptsCol.orderBy('createdAt', 'desc').get();
+        const snapshot = await receiptsCol.orderBy('createdAt','desc').get();
         loadingWrap.style.display = 'none';
-
-        if (snapshot.empty) {
-            emptyWrap.style.display = 'flex';
-            return;
-        }
+        if (snapshot.empty) { emptyWrap.style.display = 'flex'; return; }
         snapshot.forEach(doc => renderReceipt(doc.id, doc.data(), false));
-    } catch (err) {
+    } catch(err) {
         loadingWrap.style.display = 'none';
         emptyWrap.style.display   = 'flex';
-        console.error('Firestore load error:', err);
         showToast('Failed to load receipts.', 'error');
     }
 }
 
-// ── Add Receipt modal ─────────────────────────────────────────────────────
+// ── Add receipt modal ──────────────────────────────────────────
 addBtn.addEventListener('click', () => {
     editingId = null;
     document.getElementById('modal-title').textContent = 'Add Receipt';
-    document.getElementById('tenant-name').value  = '';
-    document.getElementById('amount').value        = '';
-    document.getElementById('description').value  = '';
-    document.getElementById('status').value        = 'paid';
+    ['tenant-name','amount','description'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('status').value = 'paid';
     modal.classList.add('open');
 });
-
 cancelBtn.addEventListener('click', () => modal.classList.remove('open'));
 modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 
-// ── Edit modal ────────────────────────────────────────────────────────────
 function openEditModal(event) {
     event.preventDefault();
     const card = event.currentTarget.closest('.receipt-card');
     editingId  = card.getAttribute('data-receipt-id');
-
     document.getElementById('modal-title').textContent = 'Edit Receipt';
     document.getElementById('tenant-name').value  = card.querySelector('.receipt-meta').textContent.split(' · ')[0].trim();
-    document.getElementById('amount').value        = card.querySelector('.receipt-amount').textContent.replace('₱', '').replace(/,/g, '');
+    document.getElementById('amount').value        = card.querySelector('.receipt-amount').textContent.replace('₱','').replace(/,/g,'');
     document.getElementById('description').value  = card.querySelector('.receipt-desc').textContent;
     document.getElementById('status').value        = card.querySelector('.receipt-badge').classList.contains('badge-paid') ? 'paid' : 'pending';
-
     document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
     modal.classList.add('open');
 }
 
-// ── Save receipt ──────────────────────────────────────────────────────────
 saveBtn.addEventListener('click', async () => {
     const name   = document.getElementById('tenant-name').value.trim();
     const amount = document.getElementById('amount').value.trim();
     const desc   = document.getElementById('description').value.trim() || 'Receipt';
     const status = document.getElementById('status').value;
+    if (!name || !amount) { showToast('Please fill in Tenant Name and Amount.','error'); return; }
 
-    if (!name || !amount) {
-        showToast('Please fill in Tenant Name and Amount.', 'error');
-        return;
-    }
-
-    saveBtn.disabled    = true;
-    saveBtn.textContent = 'Saving…';
-
-    const now = new Date().toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
-
+    saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
+    const now = new Date().toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});
     try {
         if (editingId) {
-            await receiptsCol.doc(editingId).update({ name, amount, description: desc, status, date: now });
+            await receiptsCol.doc(editingId).update({name,amount,description:desc,status,date:now});
             const card = document.querySelector(`[data-receipt-id="${editingId}"]`);
             if (card) {
                 card.querySelector('.receipt-desc').textContent = desc;
                 card.querySelector('.receipt-meta').textContent = `${name} · ${now}`;
                 const badge = card.querySelector('.receipt-badge');
-                badge.className   = `receipt-badge ${status === 'paid' ? 'badge-paid' : 'badge-pending'}`;
+                badge.className   = `receipt-badge ${status==='paid'?'badge-paid':'badge-pending'}`;
                 badge.textContent = status === 'paid' ? 'Paid' : 'Pending';
-                card.querySelector('.receipt-amount').textContent =
-                    '₱' + parseFloat(amount).toLocaleString('en-PH', { minimumFractionDigits: 2 });
+                card.querySelector('.receipt-amount').textContent = '₱' + parseFloat(amount).toLocaleString('en-PH',{minimumFractionDigits:2});
             }
-            showToast('Receipt updated!', 'success');
+            showToast('Receipt updated!','success');
         } else {
-            const docRef = await receiptsCol.add({
-                name, amount, description: desc, status, date: now,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
+            const docRef = await receiptsCol.add({name,amount,description:desc,status,date:now,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
             emptyWrap.style.display = 'none';
-            renderReceipt(docRef.id, { name, amount, description: desc, status, date: now });
-            showToast('Receipt added!', 'success');
+            renderReceipt(docRef.id,{name,amount,description:desc,status,date:now});
+            showToast('Receipt added!','success');
         }
         modal.classList.remove('open');
-    } catch (err) {
-        console.error('Firestore save error:', err);
-        showToast('Failed to save receipt.', 'error');
+    } catch(err) {
+        showToast('Failed to save receipt.','error');
     } finally {
-        saveBtn.disabled    = false;
-        saveBtn.textContent = 'Save';
+        saveBtn.disabled = false; saveBtn.textContent = 'Save';
     }
 });
 
-// ── Delete receipt ────────────────────────────────────────────────────────
 async function deleteReceipt(event) {
     event.preventDefault();
     const card       = event.currentTarget.closest('.receipt-card');
     const docId      = card.getAttribute('data-receipt-id');
     const tenantName = card.querySelector('.receipt-meta').textContent.split(' · ')[0].trim();
-
     if (!confirm(`Delete ${tenantName}'s receipt?`)) return;
-
     card.style.animation = 'fadeOut 0.3s ease forwards';
     setTimeout(async () => {
         try {
             await receiptsCol.doc(docId).delete();
-            card.remove();
-            updateCountBadge();
-            if (list.children.length === 0) emptyWrap.style.display = 'flex';
-            showToast('Receipt deleted.', 'success');
-        } catch (err) {
-            console.error('Firestore delete error:', err);
-            showToast('Failed to delete receipt.', 'error');
+            card.remove(); updateCountBadge();
+            if (!list.children.length) emptyWrap.style.display = 'flex';
+            showToast('Receipt deleted.','success');
+        } catch(err) {
+            showToast('Failed to delete.','error');
             card.style.animation = '';
         }
     }, 300);
 }
 
-// ── Dropdown toggle ───────────────────────────────────────────────────────
 function togglePaymentMenu(event) {
-    event.preventDefault();
-    event.stopPropagation();
+    event.preventDefault(); event.stopPropagation();
     const menu = event.currentTarget.nextElementSibling;
     document.querySelectorAll('.dropdown-menu').forEach(m => { if (m !== menu) m.classList.remove('show'); });
     menu.classList.toggle('show');
@@ -826,32 +589,22 @@ document.addEventListener('click', e => {
         document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
 });
 
-// ── Upload Receipt (Tenant) ───────────────────────────────────────────────
-const dropZone    = document.getElementById('dropZone');
-const fileInput   = document.getElementById('fileInput');
-const previewWrap = document.getElementById('previewWrap');
-const previewImg  = document.getElementById('previewImg');
-
-fileInput.addEventListener('change', () => {
-    if (fileInput.files[0]) loadPreview(fileInput.files[0]);
-});
-
+// ── File preview ───────────────────────────────────────────────
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadPreview(fileInput.files[0]); });
 document.getElementById('removeImg').addEventListener('click', clearPreview);
-
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
 dropZone.addEventListener('drop', e => {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
+    e.preventDefault(); dropZone.classList.remove('dragover');
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) loadPreview(file);
 });
 
 function loadPreview(file) {
+    uploadedFile = file;
     const reader = new FileReader();
     reader.onload = e => {
-        uploadedImageData = e.target.result;
-        previewImg.src    = uploadedImageData;
+        previewImg.src = e.target.result;
         previewWrap.style.display = 'block';
         dropZone.style.display    = 'none';
     };
@@ -859,11 +612,13 @@ function loadPreview(file) {
 }
 
 function clearPreview() {
-    uploadedImageData             = null;
-    previewImg.src                = '';
-    previewWrap.style.display     = 'none';
-    dropZone.style.display        = 'block';
-    fileInput.value               = '';
+    uploadedFile = null;
+    previewImg.src = '';
+    previewWrap.style.display = 'none';
+    dropZone.style.display    = 'block';
+    fileInput.value = '';
+    document.getElementById('uploadProgress').style.display = 'none';
+    document.getElementById('progressBar').style.width      = '0%';
 }
 
 document.getElementById('cancelUploadBtn').addEventListener('click', () => {
@@ -872,53 +627,90 @@ document.getElementById('cancelUploadBtn').addEventListener('click', () => {
     document.getElementById('uploadNote').value   = '';
     uploadOverlay.classList.remove('open');
 });
-
 uploadOverlay.addEventListener('click', e => { if (e.target === uploadOverlay) uploadOverlay.classList.remove('open'); });
 
-document.getElementById('submitUploadBtn').addEventListener('click', () => {
+// ── SUBMIT: Cloudinary → Firestore URL ────────────────────────
+document.getElementById('submitUploadBtn').addEventListener('click', async () => {
     const name = document.getElementById('uploaderName').value.trim();
     const note = document.getElementById('uploadNote').value.trim();
 
-    if (!uploadedImageData) { showToast('Please select an image.', 'error'); return; }
-    if (!name)              { showToast('Please enter your name.', 'error'); return; }
+    if (!uploadedFile) { showToast('Please select an image.','error'); return; }
+    if (!name)         { showToast('Please enter your name.','error'); return; }
 
-    const submissions = getSubmissions();
-    submissions.unshift({
-        id: 's' + Date.now(),
-        name,
-        note: note || '(no note)',
-        imageData: uploadedImageData,
-        date: new Date().toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-    });
-    saveSubmissions(submissions);
+    const submitBtn   = document.getElementById('submitUploadBtn');
+    const progressEl  = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('progressBar');
+    const progressLbl = document.getElementById('progressLabel');
 
-    clearPreview();
-    document.getElementById('uploaderName').value = '';
-    document.getElementById('uploadNote').value   = '';
-    uploadOverlay.classList.remove('open');
-    showToast('Receipt submitted to landlord!', 'success');
+    submitBtn.disabled    = true;
+    submitBtn.textContent = 'Uploading…';
+    progressEl.style.display = 'block';
+    progressLbl.textContent  = 'Uploading image to cloud…';
+
+    try {
+        // 1. Upload image file to Cloudinary — stored on the web
+        const imageUrl = await uploadToCloudinary(uploadedFile, pct => {
+            progressBar.style.width  = pct + '%';
+            progressLbl.textContent  = `Uploading… ${pct}%`;
+        });
+
+        progressBar.style.width  = '100%';
+        progressLbl.textContent  = 'Saving…';
+
+        // 2. Save just the URL to Firestore — no size limit, cross-browser
+        await submissionsCol.add({
+            name,
+            note: note || '(no note)',
+            imageUrl,
+            date: new Date().toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        clearPreview();
+        document.getElementById('uploaderName').value = '';
+        document.getElementById('uploadNote').value   = '';
+        uploadOverlay.classList.remove('open');
+        showToast('Receipt submitted to landlord!','success');
+
+    } catch(err) {
+        console.error('Upload error:', err);
+        showToast('Upload failed: ' + err.message, 'error');
+    } finally {
+        submitBtn.disabled    = false;
+        submitBtn.textContent = 'Submit';
+        progressEl.style.display = 'none';
+        progressBar.style.width  = '0%';
+    }
 });
 
-// ── View Submitted (Landlord) ─────────────────────────────────────────────
-function openViewModal() {
-    const submissions = getSubmissions();
+// ── View Submitted (Landlord) ──────────────────────────────────
+async function openViewModal() {
     const listEl = document.getElementById('submittedList');
-    listEl.innerHTML = '';
+    listEl.innerHTML = '<div class="loading-wrap"><i class="fas fa-spinner fa-spin"></i> Loading…</div>';
+    viewOverlay.classList.add('open');
 
-    if (!submissions.length) {
-        listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
-    } else {
-        submissions.forEach(s => {
+    try {
+        const snapshot = await submissionsCol.orderBy('createdAt','desc').get();
+        listEl.innerHTML = '';
+
+        if (snapshot.empty) {
+            listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
+            return;
+        }
+
+        snapshot.forEach(doc => {
+            const s   = doc.data();
+            const sid = doc.id;
             const card = document.createElement('div');
             card.className = 'submitted-card';
-            card.setAttribute('data-sid', s.id);
+            card.setAttribute('data-sid', sid);
             card.innerHTML = `
-                <img class="submitted-img" src="${s.imageData}" alt="Receipt" data-sid="${s.id}">
+                <img class="submitted-img" src="${s.imageUrl}" alt="Receipt">
                 <div class="submitted-info">
                     <div class="submitted-tenant"><i class="fas fa-user" style="color:#2C96CD;margin-right:5px;font-size:11px"></i>${s.name}</div>
                     <div class="submitted-note">${s.note}</div>
                     <div class="submitted-date">${s.date}</div>
-                    <button class="submitted-dismiss" data-sid="${s.id}">✕ Dismiss</button>
+                    <button class="submitted-dismiss" data-sid="${sid}">✕ Dismiss</button>
                 </div>`;
             listEl.appendChild(card);
         });
@@ -933,37 +725,38 @@ function openViewModal() {
         listEl.querySelectorAll('.submitted-dismiss').forEach(btn => {
             btn.addEventListener('click', () => dismissSubmission(btn.getAttribute('data-sid')));
         });
-    }
 
-    viewOverlay.classList.add('open');
+    } catch(err) {
+        listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-exclamation-circle"></i> Failed to load.</div>';
+    }
 }
 
-function dismissSubmission(sid) {
-    const subs = getSubmissions().filter(x => x.id !== sid);
-    saveSubmissions(subs);
-    const card = document.querySelector(`[data-sid="${sid}"]`);
-    if (card) card.remove();
-    const listEl = document.getElementById('submittedList');
-    if (!listEl.children.length) {
-        listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
+async function dismissSubmission(sid) {
+    try {
+        await submissionsCol.doc(sid).delete();
+        const card = document.querySelector(`[data-sid="${sid}"]`);
+        if (card) card.remove();
+        const listEl = document.getElementById('submittedList');
+        if (!listEl.children.length)
+            listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
+        renderHeaderActions();
+        showToast('Receipt dismissed.','success');
+    } catch(err) {
+        showToast('Failed to dismiss.','error');
     }
-    renderHeaderActions();
-    showToast('Receipt dismissed.', 'success');
 }
 
 document.getElementById('closeViewModal').addEventListener('click', () => viewOverlay.classList.remove('open'));
 viewOverlay.addEventListener('click', e => { if (e.target === viewOverlay) viewOverlay.classList.remove('open'); });
-
-// ── Lightbox ──────────────────────────────────────────────────────────────
 lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
 
-// ── Landlord modal ────────────────────────────────────────────────────────
+// ── Landlord modal ─────────────────────────────────────────────
 document.getElementById('closeLandlordModal').addEventListener('click', () => landlordModal.classList.remove('open'));
 landlordModal.addEventListener('click', e => { if (e.target === landlordModal) landlordModal.classList.remove('open'); });
 
 function selectPaymentMethod(event, method) {
     document.querySelectorAll('.payment-method-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.landlord-details').forEach(d => { d.style.display = 'none'; d.classList.remove('show'); });
+    document.querySelectorAll('.landlord-details').forEach(d => { d.style.display='none'; d.classList.remove('show'); });
     event.currentTarget.classList.add('active');
     const target = method === 'gcash' ? 'gcashDetails' : 'bankDetails';
     document.getElementById(target).style.display = 'block';
@@ -972,10 +765,10 @@ function selectPaymentMethod(event, method) {
 
 function copyToClipboard(elementId) {
     const text = document.getElementById(elementId).textContent;
-    navigator.clipboard.writeText(text).then(() => showToast('Copied: ' + text, 'success'));
+    navigator.clipboard.writeText(text).then(() => showToast('Copied: ' + text,'success'));
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────
+// ── Init ───────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadUserProfile();
     loadReceipts();
