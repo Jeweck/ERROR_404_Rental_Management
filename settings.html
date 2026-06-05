@@ -89,6 +89,12 @@
             align-items: flex-end;
         }
 
+        .s-form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
         .s-form-group { display: flex; flex-direction: column; gap: 5px; }
         .s-form-label { font-size: 12px; font-weight: 600; color: #777; }
 
@@ -250,25 +256,10 @@
                             <input class="s-form-input" id="generalContactEmail" type="email" value="admin@Rental.ph">
                         </div>
                     </div>
-                    <div class="s-form-row-4">
-                        <div class="s-form-group">
-                            <label class="s-form-label">Time zone</label>
-                            <select class="s-form-select" id="generalTimezone">
-                                <option>(GMT+08:00) Manila</option>
-                                <option>(GMT+00:00) UTC</option>
-                                <option>(GMT-05:00) Eastern Time</option>
-                                <option>(GMT+09:00) Tokyo</option>
-                            </select>
-                        </div>
-                        <div class="s-form-group">
-                            <label class="s-form-label">Language</label>
-                            <select class="s-form-select" id="generalLanguage">
-                                <option>English (PH)</option>
-                                <option>Filipino</option>
-                                <option>English (US)</option>
-                            </select>
-                        </div>
-                        <button class="s-save-btn" onclick="saveGeneral()">Save Changes</button>
+
+                    <!-- Landlord: 3-col with Save button | Tenant: 2-col no button -->
+                    <div id="generalBottomRow">
+                        <!-- Rendered by JS based on role -->
                     </div>
                 </div>
             </div>
@@ -287,9 +278,7 @@
                         <button class="account-btn" onclick="updateEmail()">
                             <i class="fas fa-envelope" style="margin-right:8px;"></i>Update Email
                         </button>
-                        <button class="account-btn" onclick="updateNumber()">
-                            <i class="fas fa-phone" style="margin-right:8px;"></i>Update Phone Number
-                        </button>
+                        <!-- Phone Number button hidden for both roles — removed -->
                     </div>
                 </div>
             </div>
@@ -344,29 +333,6 @@
     </div>
 </div>
 
-<!-- MODAL: Update Phone Number -->
-<div class="s-modal-overlay" id="modalUpdateNumber">
-    <div class="s-modal">
-        <button class="s-modal-close" onclick="document.getElementById('modalUpdateNumber').style.display='none'">&times;</button>
-        <div class="s-modal-title"><i class="fas fa-phone" style="color:#2C96CD;margin-right:8px;"></i>Update Phone Number</div>
-        <div class="s-modal-group">
-            <label class="s-modal-label">Current Phone Number</label>
-            <input class="s-modal-input" id="unCurrentPhone" type="tel" readonly>
-        </div>
-        <div class="s-modal-group">
-            <label class="s-modal-label">New Phone Number</label>
-            <input class="s-modal-input" id="unNewPhone" type="tel" placeholder="+63 9XX XXX XXXX">
-        </div>
-        <div class="s-modal-group">
-            <label class="s-modal-label">Current Password (to confirm)</label>
-            <input class="s-modal-input" id="unCurrentPassword" type="password" placeholder="Enter your password">
-        </div>
-        <div class="s-modal-error" id="unError"></div>
-        <button class="s-modal-submit" data-label="Update Number" onclick="submitUpdateNumber()">Update Number</button>
-        <p class="s-modal-hint">Phone number is stored in your profile only — not used for SMS auth.</p>
-    </div>
-</div>
-
 <!-- Toast -->
 <div class="settings-toast" id="settingsToast"></div>
 
@@ -377,6 +343,67 @@ document.querySelectorAll('.s-modal-overlay').forEach(overlay => {
         if (e.target === overlay) overlay.style.display = 'none';
     });
 });
+</script>
+
+<script>
+// ─── ROLE-BASED UI ───────────────────────────────────────────────
+// This reads the user role from localStorage (set during login).
+// Your login flow should store it like: localStorage.setItem('userRole', 'tenant') or 'landlord'
+
+function applyRoleSettings() {
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const role = userData.role || 'tenant'; // reads role from your login.js
+    const row = document.getElementById('generalBottomRow');
+
+    if (role === 'landlord') {
+        // Landlord: show Save Changes button
+        row.innerHTML = `
+            <div class="s-form-row-4">
+                <div class="s-form-group">
+                    <label class="s-form-label">Time zone</label>
+                    <select class="s-form-select" id="generalTimezone">
+                        <option>(GMT+08:00) Manila</option>
+                        <option>(GMT+00:00) UTC</option>
+                        <option>(GMT-05:00) Eastern Time</option>
+                        <option>(GMT+09:00) Tokyo</option>
+                    </select>
+                </div>
+                <div class="s-form-group">
+                    <label class="s-form-label">Language</label>
+                    <select class="s-form-select" id="generalLanguage">
+                        <option>English (PH)</option>
+                        <option>Filipino</option>
+                        <option>English (US)</option>
+                    </select>
+                </div>
+                <button class="s-save-btn" onclick="saveGeneral()">Save Changes</button>
+            </div>`;
+    } else {
+        // Tenant: no Save Changes button
+        row.innerHTML = `
+            <div class="s-form-row-2">
+                <div class="s-form-group">
+                    <label class="s-form-label">Time zone</label>
+                    <select class="s-form-select" id="generalTimezone">
+                        <option>(GMT+08:00) Manila</option>
+                        <option>(GMT+00:00) UTC</option>
+                        <option>(GMT-05:00) Eastern Time</option>
+                        <option>(GMT+09:00) Tokyo</option>
+                    </select>
+                </div>
+                <div class="s-form-group">
+                    <label class="s-form-label">Language</label>
+                    <select class="s-form-select" id="generalLanguage">
+                        <option>English (PH)</option>
+                        <option>Filipino</option>
+                        <option>English (US)</option>
+                    </select>
+                </div>
+            </div>`;
+    }
+}
+
+applyRoleSettings();
 </script>
 
 <script type="module" src="settings.js"></script>
