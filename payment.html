@@ -536,12 +536,13 @@ const firebaseConfig = {
 };
 
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-const db          = firebase.firestore();
-const receiptsCol = db.collection('receipts');
+const db             = firebase.firestore();
+const receiptsCol    = db.collection('receipts');
+const submissionsCol = db.collection('submittedReceipts'); // ← NEW: shared via Firestore
 
 // ── State ─────────────────────────────────────────────────────────────────
-let userRole    = 'landlord';
-let editingId   = null;
+let userRole          = 'landlord';
+let editingId         = null;
 let uploadedImageData = null;
 
 // ── DOM refs ──────────────────────────────────────────────────────────────
@@ -572,16 +573,24 @@ function updateCountBadge() {
     if (badge) badge.textContent = count + ' receipt' + (count !== 1 ? 's' : '');
 }
 
-// ── Submissions (localStorage) ────────────────────────────────────────────
-function getSubmissions() {
-    try { return JSON.parse(localStorage.getItem('submittedReceipts') || '[]'); } catch(e) { return []; }
-}
-function saveSubmissions(arr) {
-    localStorage.setItem('submittedReceipts', JSON.stringify(arr));
+// ── Compress image before saving to Firestore (keeps docs under 1MB) ──────
+function compressImage(dataUrl, maxWidth = 900) {
+    return new Promise(resolve => {
+        const img  = new Image();
+        img.onload = () => {
+            const canvas  = document.createElement('canvas');
+            const scale   = Math.min(1, maxWidth / img.width);
+            canvas.width  = img.width  * scale;
+            canvas.height = img.height * scale;
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', 0.72));
+        };
+        img.src = dataUrl;
+    });
 }
 
 // ── Header actions (role-based) ───────────────────────────────────────────
-function renderHeaderActions() {
+async function renderHeaderActions() {
     const area = document.getElementById('headerActions');
     if (userRole === 'tenant') {
         area.innerHTML = `
@@ -592,7 +601,13 @@ function renderHeaderActions() {
             uploadOverlay.classList.add('open');
         });
     } else {
-        const count = getSubmissions().length;
+        // Live count from Firestore so landlord sees the real number
+        let count = 0;
+        try {
+            const snap = await submissionsCol.get();
+            count = snap.size;
+        } catch(e) { /* silently fail */ }
+
         const badgeHtml = count ? `<span class="submitted-badge">${count}</span>` : '';
         area.innerHTML = `
             <button class="hdr-btn hdr-btn-outline" id="viewSubmittedBtn">
@@ -604,7 +619,7 @@ function renderHeaderActions() {
 
 // ── Load user profile ─────────────────────────────────────────────────────
 function loadUserProfile() {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(sessionStorage.getItem('userData') || localStorage.getItem('userData') || 'null');
     if (!userData) { window.location.replace('index.html'); return; }
 
     userRole = userData.role || 'landlord';
@@ -616,7 +631,7 @@ function loadUserProfile() {
     if (nameParts.length >= 2) {
         initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
     } else if (userData.email) {
-        const emailUser = userData.email.split('@')[0].replace(/[0-9]/g, '');
+        const emailUser  = userData.email.split('@')[0].replace(/[0-9]/g, '');
         const emailParts = emailUser.match(/[a-z]+/gi) || [];
         initials = emailParts.length >= 2
             ? (emailParts[0][0] + emailParts[1][0]).toUpperCase()
@@ -875,50 +890,75 @@ document.getElementById('cancelUploadBtn').addEventListener('click', () => {
 
 uploadOverlay.addEventListener('click', e => { if (e.target === uploadOverlay) uploadOverlay.classList.remove('open'); });
 
-document.getElementById('submitUploadBtn').addEventListener('click', () => {
+// ── Submit Upload → Firestore (works across browsers!) ────────────────────
+document.getElementById('submitUploadBtn').addEventListener('click', async () => {
     const name = document.getElementById('uploaderName').value.trim();
     const note = document.getElementById('uploadNote').value.trim();
 
     if (!uploadedImageData) { showToast('Please select an image.', 'error'); return; }
     if (!name)              { showToast('Please enter your name.', 'error'); return; }
 
-    const submissions = getSubmissions();
-    submissions.unshift({
-        id: 's' + Date.now(),
-        name,
-        note: note || '(no note)',
-        imageData: uploadedImageData,
-        date: new Date().toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-    });
-    saveSubmissions(submissions);
+    const submitBtn = document.getElementById('submitUploadBtn');
+    submitBtn.disabled    = true;
+    submitBtn.textContent = 'Submitting…';
 
-    clearPreview();
-    document.getElementById('uploaderName').value = '';
-    document.getElementById('uploadNote').value   = '';
-    uploadOverlay.classList.remove('open');
-    showToast('Receipt submitted to landlord!', 'success');
+    try {
+        // Compress image first to stay under Firestore's 1MB doc limit
+        const compressedImage = await compressImage(uploadedImageData);
+
+        await submissionsCol.add({
+            name,
+            note: note || '(no note)',
+            imageData: compressedImage,
+            date: new Date().toLocaleDateString('en-PH', {
+                month: 'short', day: 'numeric', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            }),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        clearPreview();
+        document.getElementById('uploaderName').value = '';
+        document.getElementById('uploadNote').value   = '';
+        uploadOverlay.classList.remove('open');
+        showToast('Receipt submitted to landlord!', 'success');
+    } catch (err) {
+        console.error('Submission error:', err);
+        showToast('Failed to submit receipt. Image may be too large.', 'error');
+    } finally {
+        submitBtn.disabled    = false;
+        submitBtn.textContent = 'Submit';
+    }
 });
 
-// ── View Submitted (Landlord) ─────────────────────────────────────────────
-function openViewModal() {
-    const submissions = getSubmissions();
+// ── View Submitted (Landlord) → reads from Firestore ─────────────────────
+async function openViewModal() {
     const listEl = document.getElementById('submittedList');
-    listEl.innerHTML = '';
+    listEl.innerHTML = '<div class="loading-wrap"><i class="fas fa-spinner fa-spin"></i> Loading…</div>';
+    viewOverlay.classList.add('open');
 
-    if (!submissions.length) {
-        listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
-    } else {
-        submissions.forEach(s => {
+    try {
+        const snapshot = await submissionsCol.orderBy('createdAt', 'desc').get();
+        listEl.innerHTML = '';
+
+        if (snapshot.empty) {
+            listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
+            return;
+        }
+
+        snapshot.forEach(doc => {
+            const s   = doc.data();
+            const sid = doc.id;
             const card = document.createElement('div');
             card.className = 'submitted-card';
-            card.setAttribute('data-sid', s.id);
+            card.setAttribute('data-sid', sid);
             card.innerHTML = `
-                <img class="submitted-img" src="${s.imageData}" alt="Receipt" data-sid="${s.id}">
+                <img class="submitted-img" src="${s.imageData}" alt="Receipt" data-sid="${sid}">
                 <div class="submitted-info">
                     <div class="submitted-tenant"><i class="fas fa-user" style="color:#2C96CD;margin-right:5px;font-size:11px"></i>${s.name}</div>
                     <div class="submitted-note">${s.note}</div>
                     <div class="submitted-date">${s.date}</div>
-                    <button class="submitted-dismiss" data-sid="${s.id}">✕ Dismiss</button>
+                    <button class="submitted-dismiss" data-sid="${sid}">✕ Dismiss</button>
                 </div>`;
             listEl.appendChild(card);
         });
@@ -933,22 +973,29 @@ function openViewModal() {
         listEl.querySelectorAll('.submitted-dismiss').forEach(btn => {
             btn.addEventListener('click', () => dismissSubmission(btn.getAttribute('data-sid')));
         });
-    }
 
-    viewOverlay.classList.add('open');
+    } catch (err) {
+        console.error('Load submissions error:', err);
+        listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-exclamation-circle"></i> Failed to load receipts.</div>';
+    }
 }
 
-function dismissSubmission(sid) {
-    const subs = getSubmissions().filter(x => x.id !== sid);
-    saveSubmissions(subs);
-    const card = document.querySelector(`[data-sid="${sid}"]`);
-    if (card) card.remove();
-    const listEl = document.getElementById('submittedList');
-    if (!listEl.children.length) {
-        listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
+// ── Dismiss submission → deletes from Firestore ───────────────────────────
+async function dismissSubmission(sid) {
+    try {
+        await submissionsCol.doc(sid).delete();
+        const card = document.querySelector(`[data-sid="${sid}"]`);
+        if (card) card.remove();
+        const listEl = document.getElementById('submittedList');
+        if (!listEl.children.length) {
+            listEl.innerHTML = '<div class="no-submissions"><i class="fas fa-inbox"></i>No submitted receipts yet.</div>';
+        }
+        renderHeaderActions(); // refresh badge count
+        showToast('Receipt dismissed.', 'success');
+    } catch (err) {
+        console.error('Dismiss error:', err);
+        showToast('Failed to dismiss receipt.', 'error');
     }
-    renderHeaderActions();
-    showToast('Receipt dismissed.', 'success');
 }
 
 document.getElementById('closeViewModal').addEventListener('click', () => viewOverlay.classList.remove('open'));
